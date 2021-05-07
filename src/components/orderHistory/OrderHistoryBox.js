@@ -4,9 +4,10 @@ import axios from "../../configs/axios";
 import { getToken } from "../../services/localStorageService";
 import jwt_decode from "jwt-decode";
 
+import OrderHistoryBoxFooter from "./OrderHistoryBoxFooter";
+
 function OrderHistoryBox() {
   const [orderHistory, setOrderHistory] = useState();
-  // const [orderItem, setOrderItem] = useState()
 
   useEffect(async () => {
     await decodeToken();
@@ -18,14 +19,11 @@ function OrderHistoryBox() {
       const resOrderHistory = await axios.get(
         "/orders/user/" + decodedUserData.id
       );
-      // console.log(resOrderHistory.data.allOrdersByUserId[0].createdAt)
       setOrderHistory(resOrderHistory.data.allOrdersByUserId);
     } catch (err) {
       console.log(err);
     }
   }
-
-  // console.log(orderHistory)
 
   return (
     <>
@@ -80,29 +78,8 @@ function OrderHistoryBox() {
               );
             })}
 
-            {/* reduce ซ้อน reduce */}
-            {/* {orderHistory?.reduce((acc2, item2, index) => {
-      const test = item2.OrderDetails.reduce((acc3, item3, index) => {
-        // console.log(item3.CardCode.CardProduct.price)
-        // acc3 + +item3.CardCode.CardProduct.price
-        // console.log(a)
-        return acc3 + +item3.CardCode.CardProduct.price
-      }, 0)
-        
-
-      return (
-      <div className="content-center-profile-historyBox-orderDetail-pre-footer">
-        <div><h3>ราคารวม</h3></div>
-        <div><h3>{test} บาท</h3></div>
-      </div>
-      )
-      }, 0)
-    } */}
-
             {/* เจาะ reduce หาค่า acc ที่แท้จริง เอามาทำผลรวมของOrderแต่ละ Order */}
             {item.OrderDetails.reduce((acc2, item2, index) => {
-              // console.log(+item2.CardCode.CardProduct.price)
-              // {(acc2.props) ? console.log(acc2.props.children[1].props.children.props.children[0]) : console.log("no")}
               return (
                 <div className="content-center-profile-historyBox-orderDetail-pre-footer">
                   <div>
@@ -122,90 +99,17 @@ function OrderHistoryBox() {
               );
             }, 0)}
 
-            {/* แบบยังไม่ได้ทำอะไรเลย */}
-            {/* <div className="content-center-profile-historyBox-orderDetail-pre-footer">
-    <div><h3>ราคารวม</h3></div>
-    <div><h3>{75/1.5*1 + 135/1.5*5} บาท</h3></div>
-  </div> */}
-
             <div className="content-center-profile-historyBox-orderDetail-footer">
-              <div>
-                <h3>Order Status: {item.paymentStatus}</h3>
-              </div>
-              <div>
-                <button className="content-center-profile-historyBox-orderDetail-footer-btn">
-                  อัพโหลดหลักฐานการโอนเงิน
-                </button>
-              </div>
-              <div>
-                <button className="content-center-profile-historyBox-orderDetail-footer-btn">
-                  ดูรหัสสินค้า
-                </button>
-              </div>
+              <OrderHistoryBoxFooter
+                orderId={item.id}
+                paymentStatus={item.paymentStatus}
+                paymentId={item.paymentId}
+              />
             </div>
           </div>
         );
       })}
     </>
-
-    // // แบบไม่ทำอะไรไว้เลย static web
-    // <div className="content-center-profile-historyBox-orderDetail">
-
-    //   <div className="content-center-profile-historyBox-orderDetail-header">
-    //     <div><h3>Order Id: {"1"}</h3></div>
-    //     <div><h3>Order Date: {"XX-XX-20XX"}</h3></div>
-    //   </div>
-
-    //     <table className="content-center-profile-historyBox-orderDetail-table">
-    //       <tbody>
-    //         <tr>
-    //           <td>
-    //             <div className="content-center-profile-historyBox-orderDetail-table-left">
-    //               <img  alt="item1" className="content-center-profile-historyBox-orderDetail-table-itemImg" />
-    //             </div>
-    //           </td>
-    //           <td>{"75 shell"}</td>
-    //           <td>จำนวน x {"1"}</td>
-    //           <td>
-    //             <div className="content-center-profile-historyBox-orderDetail-table-right">
-    //               ราคา {75/1.5*1} บาท
-    //             </div>
-    //           </td>
-    //         </tr>
-    //       </tbody>
-    //     </table>
-
-    //     <table className="content-center-profile-historyBox-orderDetail-table">
-    //       <tbody>
-    //         <tr>
-    //           <td>
-    //             <div className="content-center-profile-historyBox-orderDetail-table-left">
-    //               <img  alt="item1" className="content-center-profile-historyBox-orderDetail-table-itemImg" />
-    //             </div>
-    //           </td>
-    //           <td>{"75 shell"}</td>
-    //           <td>จำนวน x {"1"}</td>
-    //           <td>
-    //             <div className="content-center-profile-historyBox-orderDetail-table-right">
-    //               ราคา {75/1.5*1} บาท
-    //             </div>
-    //           </td>
-    //         </tr>
-    //       </tbody>
-    //     </table>
-
-    //   <div className="content-center-profile-historyBox-orderDetail-pre-footer">
-    //     <div><h3>ราคารวม</h3></div>
-    //     <div><h3>{75/1.5*1 + 135/1.5*5} บาท</h3></div>
-    //   </div>
-
-    //   <div className="content-center-profile-historyBox-orderDetail-footer">
-    //     <div><h3>Order Status: {"COMPLETE"}</h3></div>
-    //     <div><button className="content-center-profile-historyBox-orderDetail-footer-btn">อัพโหลดหลักฐานการโอนเงิน</button></div>
-    //     <div><button className="content-center-profile-historyBox-orderDetail-footer-btn">ดูรหัสสินค้า</button></div>
-    //   </div>
-
-    // </div>
   );
 }
 

@@ -2,7 +2,7 @@
   margin: 0px;
   padding: 0px;
   box-sizing: border-box;
-  font-family: 'K2D', sans-serif;
+  font-family: "K2D", sans-serif;
   /* font-weight: bold; */
   /* font-family: 'Charm', cursive; */
 }
@@ -15,9 +15,8 @@
 .root {
   width: 100vw;
   height: 100vh;
-  max-width:100%;
+  max-width: 100%;
 }
-
 
 /* navbar CSS */
 .navbar-outside {
@@ -59,7 +58,7 @@
 .navbar-right > * {
   padding: 10px 20px;
 }
- 
+
 .navbar-right-shopping-cartAndNumber {
   border: 2px solid white;
   border-radius: 5px;
@@ -85,7 +84,6 @@
   outline: none;
 }
 
-
 /* content CSS */
 .content-outside {
   display: flex;
@@ -93,9 +91,10 @@
 
   /* background-color: lightcoral; */
   /* height: 100%; */
-} 
+}
 
-.content-left , .content-right {
+.content-left,
+.content-right {
   width: 7.5%;
 
   /* background-color: yellow; */
@@ -104,20 +103,19 @@
 
 .content-center {
   width: 85%;
-  display:flex;
-  flex-wrap:wrap;
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
 
   /* background-color: green; */
   /* height: 100%; */
 }
 
-
 /* Content-Home.css */
 .content-center-home-item-wrap {
-  width:350px;
-  height:500px;
-  margin:25px;
+  width: 350px;
+  height: 500px;
+  margin: 25px;
   display: flex;
   justify-content: center;
 
@@ -127,7 +125,7 @@
 
 .content-center-home-item-wrap-hidden {
   visibility: hidden;
-  width:350px;
+  width: 350px;
   margin: 25px;
   display: flex;
   justify-content: center;
@@ -147,7 +145,8 @@
   height: 95%;
 }
 
-.content-center-home-item-img , .content-center-home-item-img > * {
+.content-center-home-item-img,
+.content-center-home-item-img > * {
   width: 200px;
   height: 275px;
 }
@@ -155,7 +154,6 @@
 .content-center-home-item-price {
   padding: 10px;
 }
-
 
 /* button increment/subtractNumber CSS */
 .button-group-counter {
@@ -166,7 +164,8 @@
   padding: 10px 0px;
 }
 
-.button-group-counter > .button-group-subtract , .button-group-increment {
+.button-group-counter > .button-group-subtract,
+.button-group-increment {
   width: 25px;
   height: 25px;
   outline: 0;
@@ -184,8 +183,7 @@
   outline: 0;
 }
 
-
-/* button Add item to Cart */ 
+/* button Add item to Cart */
 .button-group-addToCart {
   width: 100%;
   text-align-last: center;
@@ -203,12 +201,11 @@
   font-size: 1.5rem;
 }
 
-
 /* LoginPage */
 .content-center-loginPage {
   width: 85%;
-  display:flex;
-  flex-wrap:wrap;
+  display: flex;
+  flex-wrap: wrap;
   justify-content: space-evenly;
   margin-top: 20px;
 
@@ -276,7 +273,6 @@
   outline: none;
 }
 
-
 /* ProfilePage */
 .content-center-profile {
   width: 85%;
@@ -285,7 +281,8 @@
   justify-content: center;
 }
 
-.content-center-profile-editBox , .content-center-profile-historyBox{
+.content-center-profile-editBox,
+.content-center-profile-historyBox {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -357,7 +354,7 @@
   margin-top: 18px;
   margin-left: -35px;
   outline: none;
-  font-size: 20px;  
+  font-size: 20px;
 }
 
 .content-center-profile-historyBox-inside {
@@ -377,7 +374,8 @@
   border-radius: 15px;
 }
 
-.content-center-profile-historyBox-orderDetail-header , .content-center-profile-historyBox-orderDetail-footer {
+.content-center-profile-historyBox-orderDetail-header,
+.content-center-profile-historyBox-orderDetail-footer {
   display: flex;
   justify-content: space-between;
   margin: 20px 0px;
@@ -422,11 +420,20 @@
   border: 1px solid black;
   border-radius: 15px;
   background-color: black;
-  padding: 20px;  
+  padding: 20px;
   font-weight: bold;
   color: white;
 }
 
+.content-center-profile-historyBox-orderDetail-footer-btn-hidden {
+  width: max-content;
+  outline: 0px;
+  border: 1px solid black;
+  border-radius: 15px;
+  padding: 20px;
+  font-weight: bold;
+  visibility: hidden;
+}
 
 /* AdminPage */
 .content-center-admin {
@@ -436,16 +443,18 @@
   justify-content: center;
 }
 
-.content-center-admin-firstBox , .content-center-admin-secondBox {
+.content-center-admin-firstBox,
+.content-center-admin-secondBox {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   width: 100%;
   min-width: 600px;
-  align-items: center; 
+  align-items: center;
 }
 
-.content-center-profile-admin-firstBox-inside , .content-center-profile-admin-secondBox-inside {
+.content-center-profile-admin-firstBox-inside,
+.content-center-profile-admin-secondBox-inside {
   width: 1250px;
   min-width: 560px;
   padding: 20px;
@@ -455,7 +464,8 @@
   border-radius: 10px;
 }
 
-.content-center-profile-admin-firstBox-table , .content-center-profile-admin-secondBox-table {
+.content-center-profile-admin-firstBox-table,
+.content-center-profile-admin-secondBox-table {
   width: 100%;
   margin: 10px 0px;
   border-spacing: 0px 20px;
@@ -514,10 +524,10 @@
 .content-center-profile-admin-firstBox-table-row2-div {
   width: 100%;
   display: flex;
-  justify-content: center;  
+  justify-content: center;
 }
 
-.content-center-profile-admin-firstBox-table-row2-div-img  {
+.content-center-profile-admin-firstBox-table-row2-div-img {
   width: 60%;
 }
 
@@ -525,7 +535,7 @@
   display: flex;
   flex-wrap: wrap;
   width: 80%;
-  margin-left: 10%;  
+  margin-left: 10%;
 }
 
 .content-center-profile-admin-firstBox-table-btn-add {
@@ -632,7 +642,7 @@
   display: flex;
   flex-wrap: wrap;
   width: 80%;
-  margin-left: 10%;  
+  margin-left: 10%;
   justify-content: center;
 }
 .content-center-profile-admin-secondBox-table-btn-delete {
@@ -666,7 +676,6 @@
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 
-
 /* Modal From */
 .modal-box {
   display: flex;
@@ -676,7 +685,7 @@
 .modal-box-header {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;  
+  justify-content: space-between;
 }
 
 .modal-box-header-close-btn {
@@ -729,6 +738,63 @@
   margin-bottom: -20px;
 }
 
+/* Modal Form - Payment */
+.modal-box-form-payment-table-adminBank {
+  border: 1px solid black;
+  padding: 10px;
+  margin-top: 20px;
+}
+
+.modal-box-form-payment-table-adminBank-text {
+  text-align: left;
+  padding-bottom: 10px;
+}
+
+.modal-box-form-payment-table-text {
+  padding: 20px 10px 20px 0px;
+}
+
+.modal-box-form-payment-table-input {
+  padding: 10px;
+  outline: none;
+  width: 100%;
+}
+
+.modal-box-form-payment-table-imgPre-box {
+  text-align: center;
+  margin-top: 15px;
+  height: 100px;
+  width: 100px;
+  background-color: rgba(128, 128, 128, 0.1);
+  position: relative;
+}
+
+.modal-box-form-payment-table-imgPre-box-text {
+  position: absolute;
+  margin-top: 30px;
+}
+
+.modal-box-form-payment-table-imgPre-box-text-zIndex {
+  position: absolute;
+  margin-top: 30px;
+  z-index: -1;
+}
+
+.modal-box-form-payment-table-imgPre-box-img {
+  max-height: 100px;
+  max-width: 100px;
+}
+
+.modal-box-form-payment-table-input-img {
+  padding: 10px;
+  outline: none;
+  width: 100%;
+  margin-left: -10px;
+}
+
+.modal-box-form-payment-table-dropdown {
+  border: 0.1px solid rgba(0, 0, 0, 0.5);
+}
 
 /* Error Box */
 .error-box {
@@ -746,7 +812,6 @@
   margin-bottom: -20px;
 }
 
-
 /* @media CSS */
 @media only screen and (max-width: 600px) {
   /* navbar CSS */
@@ -758,10 +823,12 @@
   .content-outside {
     width: 600px;
   }
-  .content-left , .content-right {
+  .content-left,
+  .content-right {
     width: 10%;
   }
-  .content-center , .content-center-loginPage {
+  .content-center,
+  .content-center-loginPage {
     width: 80%;
   }
 }
@@ -771,10 +838,12 @@
   .content-outside {
     width: 320;
   }
-  .content-left , .content-right {
+  .content-left,
+  .content-right {
     width: 10%;
   }
-  .content-center , .content-center-loginPage {
+  .content-center,
+  .content-center-loginPage {
     width: 80%;
   }
 }
@@ -786,7 +855,7 @@
   }
   .content-center-home-item-wrap-respon-hidden {
     visibility: hidden;
-    width:350px;
+    width: 350px;
     margin: 25px;
     display: flex;
     justify-content: center;
@@ -797,8 +866,9 @@
   .content-center-profile-historyBox-orderDetail-footer {
     font-size: 12px;
   }
-  .content-center-profile-historyBox-orderDetail-footer-btn {
-    font-size: 12px;  
+  .content-center-profile-historyBox-orderDetail-footer-btn,
+  .content-center-profile-historyBox-orderDetail-footer-btn-hidden {
+    font-size: 12px;
   }
 }
 
@@ -808,15 +878,14 @@
   .content-center-profile-admin-firstBox-table-btn-edit,
   .content-center-profile-admin-firstBox-table-btn-delete,
   .content-center-profile-admin-secondBox-table-btn-delete {
-    font-size: 14px;  
+    font-size: 14px;
   }
 }
 @media only screen and (max-width: 780px) {
   .content-center-profile-admin-firstBox-table-btn-edit {
-    font-size: 12px;  
+    font-size: 12px;
   }
   .content-center-profile-admin-firstBox-table-btn-delete {
-    font-size: 11px;  
+    font-size: 11px;
   }
 }
-
