@@ -686,6 +686,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin-bottom: 10px;
 }
 
 .modal-box-header-close-btn {
@@ -721,21 +722,6 @@
   font-weight: bold;
   font-size: 18px;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-}
-
-.modal-box-error-box {
-  color: red;
-  padding-bottom: 30px;
-}
-
-.modal-box-error-box > * {
-  text-align: center;
-  padding: 10px;
-  width: 80%;
-  background-color: rgba(255, 0, 0, 0.1);
-  color: red;
-  margin: auto;
-  margin-bottom: -20px;
 }
 
 /* Modal Form - Payment */
@@ -794,6 +780,41 @@
 
 .modal-box-form-payment-table-dropdown {
   border: 0.1px solid rgba(0, 0, 0, 0.5);
+}
+
+/* Modal Form - Add CardCode */
+.modal-box-form-addCardCode-table-input {
+  padding: 10px;
+  outline: none;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/* Modal Form - Edit CardProduct */
+.modal-box-form-editCardProduct-table {
+  margin-top: 15px;
+}
+
+.modal-box-form-editCardProduct-table-img {
+  max-height: 100px;
+  max-width: 75px;
+  margin-left: 10px;
+}
+
+/* Modal Error Box */
+.modal-box-error-box {
+  color: red;
+  padding-bottom: 30px;
+}
+
+.modal-box-error-box > * {
+  text-align: center;
+  padding: 10px;
+  width: 80%;
+  background-color: rgba(255, 0, 0, 0.1);
+  color: red;
+  margin: auto;
+  margin-bottom: -20px;
 }
 
 /* Error Box */

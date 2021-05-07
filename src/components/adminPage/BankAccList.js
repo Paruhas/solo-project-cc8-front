@@ -65,8 +65,8 @@ function BankAccList() {
   // console.log(input)
 
   const handlerSubmit = async (e) => {
+    e.preventDefault();
     try {
-      e.preventDefault();
       const addBankRes = await axios.post("/bank-acc", {
         bankName: input.bankName,
         accountName: input.accountName,
@@ -78,7 +78,7 @@ function BankAccList() {
       getBankAccounts();
       location.reload();
     } catch (err) {
-      // console.log(err)
+      console.log(err);
       // console.log(errorBankAcc)
       if (!input.bankName) {
         setErrorBankAcc((prev) => ({ ...prev, err: "bankName is required" }));

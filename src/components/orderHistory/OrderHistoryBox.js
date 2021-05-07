@@ -59,17 +59,17 @@ function OrderHistoryBox() {
                       <td>
                         <div className="content-center-profile-historyBox-orderDetail-table-left">
                           <img
-                            src={item1.CardCode.CardProduct.img}
+                            src={item1.cardCodeProductImg}
                             alt="item1"
                             className="content-center-profile-historyBox-orderDetail-table-itemImg"
                           />
                         </div>
                       </td>
-                      <td>{item1.CardCode.CardProduct.name}</td>
+                      <td>{item1.cardCodeProductName}</td>
                       {/* <td>จำนวน x {"1"}</td> */}
                       <td>
                         <div className="content-center-profile-historyBox-orderDetail-table-right">
-                          ราคา {item1.CardCode.CardProduct.price} บาท
+                          ราคา {item1.cardCodeProductPrice} บาท
                         </div>
                       </td>
                     </tr>
@@ -90,8 +90,8 @@ function OrderHistoryBox() {
                       {acc2.props
                         ? (acc2 =
                             acc2.props.children[1].props.children.props
-                              .children[0] + +item2.CardCode.CardProduct.price)
-                        : +item2.CardCode.CardProduct.price}{" "}
+                              .children[0] + +item2.cardCodeProductPrice)
+                        : +item2.cardCodeProductPrice}{" "}
                       บาท
                     </h3>
                   </div>

@@ -1,12 +1,24 @@
 import React, { useState } from "react";
 import { CloseSquareOutlined } from "@ant-design/icons";
 
-function Test1234(props) {
+import Modal from "react-modal";
+const customModalStyles = {
+  content: {
+    width: "max-content",
+    margin: "auto",
+    height: "max-content",
+  },
+};
+
+import Dropdown from "react-dropdown";
+import "react-dropdown/style.css";
+
+function ModalUploadPayment(props) {
   return (
     <Modal
-      isOpen={modalOpen}
+      isOpen={props.modalOpen}
       // onAfterOpen={afterOpenModal}
-      onRequestClose={closeModal}
+      onRequestClose={props.closeModal}
       style={customModalStyles}
       contentLabel="AddBankAcc Modal"
       ariaHideApp={false}
@@ -18,7 +30,7 @@ function Test1234(props) {
             <h2>Order ID: {props.orderId}</h2>
           </div>
           <CloseSquareOutlined
-            onClick={closeModal}
+            onClick={props.closeModal}
             className="modal-box-header-close-btn"
           />
         </div>
@@ -36,7 +48,7 @@ function Test1234(props) {
                 <h3>เลขที่บัญชี</h3>
               </td>
             </tr>
-            {adminBank?.map((item, index) => {
+            {props.adminBank?.map((item, index) => {
               return (
                 <tr key={item.id}>
                   <td className="modal-box-form-payment-table-adminBank-text">
@@ -60,7 +72,7 @@ function Test1234(props) {
               <tr>
                 <td className="modal-box-form-payment-table-text">
                   <div className="modal-box-form-payment-table-imgPre-box">
-                    {paymentImagePre.file === null ? (
+                    {props.paymentImagePre.file === null ? (
                       <div className="modal-box-form-payment-table-imgPre-box-text">
                         ภาพตัวอย่างจะแสดงตรงนี้
                       </div>
@@ -70,7 +82,7 @@ function Test1234(props) {
                       </div>
                     )}
                     <img
-                      src={paymentImagePre.file}
+                      src={props.paymentImagePre.file}
                       className="modal-box-form-payment-table-imgPre-box-img"
                     />
                   </div>
@@ -82,7 +94,7 @@ function Test1234(props) {
                     id="payment-image"
                     className="modal-box-form-payment-table-input-img"
                     name="paymentImage"
-                    onChange={handlerPaymentImage}
+                    onChange={props.handlerPaymentImage}
                   />
                 </td>
               </tr>
@@ -96,7 +108,7 @@ function Test1234(props) {
                     id="payment-date"
                     className="modal-box-form-payment-table-input"
                     name="paymentDate"
-                    onChange={handlerPaymentDate}
+                    onChange={props.handlerPaymentDate}
                   />
                 </td>
               </tr>
@@ -110,7 +122,7 @@ function Test1234(props) {
                     id="payment-time"
                     className="modal-box-form-payment-table-input"
                     name="paymentTime"
-                    onChange={handlerPaymentTime}
+                    onChange={props.handlerPaymentTime}
                   />
                 </td>
               </tr>
@@ -121,11 +133,11 @@ function Test1234(props) {
                 <td>
                   <Dropdown
                     className="modal-box-form-payment-table-dropdown"
-                    options={options}
-                    value={defaultOption}
+                    options={props.options}
+                    value={props.defaultOption}
                     placeholder="เลือกบัญชีธนาคารที่ทำการโอน"
                     name="paymentBank"
-                    onChange={handlerPaymentBankChange}
+                    onChange={props.handlerPaymentBankChange}
                   />
                 </td>
               </tr>
@@ -139,22 +151,22 @@ function Test1234(props) {
                     id="payment-number"
                     className="modal-box-form-payment-table-input"
                     name="paymentNumber"
-                    onChange={handlerPaymentNumberChange}
+                    onChange={props.handlerPaymentNumberChange}
                   />
                 </td>
               </tr>
             </tbody>
           </table>
 
-          {errorPayment.err && (
+          {props.errorPayment.err && (
             <span className="modal-box-error-box">
-              <h4>{errorPayment.err}</h4>
+              <h4>{props.errorPayment.err}</h4>
             </span>
           )}
           <button
             type="submit"
             className="modal-box-form-submit-btn"
-            onClick={handlerSubmit}
+            onClick={props.handlerSubmit}
           >
             อัพโหลดหลักฐานการโอนเงิน
           </button>
@@ -164,4 +176,4 @@ function Test1234(props) {
   );
 }
 
-export default Test1234;
+export default ModalUploadPayment;
