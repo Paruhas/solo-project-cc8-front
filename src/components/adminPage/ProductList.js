@@ -25,6 +25,8 @@ function ProductList() {
   const [productLists, setProductLists] = useState();
   const [cardCodeLists, setCardCodeLists] = useState();
 
+  const [errorProduct, setErrorProduct] = useState({});
+
   useEffect(async () => {
     await getProducts();
   }, []);
@@ -42,8 +44,6 @@ function ProductList() {
       console.log(err);
     }
   }
-
-  const [errorProduct, setErrorProduct] = useState({});
 
   // Fn Delete Product
   const handlerDeleteProduct = async (e, productId) => {
@@ -75,6 +75,12 @@ function ProductList() {
   const [modalAddCardCodeOpen, setModalAddCardCodeOpen] = useState(false);
   const [productIdForCardCode, setProductIdForCardCode] = useState({});
 
+  const [inputAddCardCode, setInputAddCardCode] = useState({
+    cardNumber: "",
+  });
+
+  const [errorAddCardCode, setErrorAddCardCode] = useState({});
+
   function openAddCardCodeModal(e, productId, productName) {
     setProductIdForCardCode({ productId, productName });
     setModalAddCardCodeOpen(true);
@@ -84,11 +90,8 @@ function ProductList() {
   function closeAddCardCodeModal() {
     setProductIdForCardCode({});
     setModalAddCardCodeOpen(false);
+    setErrorAddCardCode({});
   }
-
-  const [inputAddCardCode, setInputAddCardCode] = useState({
-    cardNumber: "",
-  });
 
   const handlerInputChange = (e) => {
     setInputAddCardCode({
@@ -96,8 +99,6 @@ function ProductList() {
     });
   };
   // console.log(inputAddCardCode);
-
-  const [errorAddCardCode, setErrorAddCardCode] = useState({});
 
   const handlerSubmitAddCardCode = async (e) => {
     e.preventDefault();
@@ -347,7 +348,14 @@ function ProductList() {
         </div>
       </div>
 
-      <ModalAddCardCode modalAddCardCodeOpen={modalAddCardCodeOpen} />
+      <ModalAddCardCode
+        closeAddCardCodeModal={closeAddCardCodeModal}
+        modalAddCardCodeOpen={modalAddCardCodeOpen}
+        productIdForCardCode={productIdForCardCode}
+        errorAddCardCode={errorAddCardCode}
+        handlerSubmitAddCardCode={handlerSubmitAddCardCode}
+        handlerInputChange={handlerInputChange}
+      />
 
       <Modal
         isOpen={modalEditCardCodeOpen}

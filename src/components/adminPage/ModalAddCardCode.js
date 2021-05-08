@@ -1,5 +1,7 @@
 import React from "react";
 
+import { CloseSquareOutlined } from "@ant-design/icons";
+
 import Modal from "react-modal";
 
 const customModalStyles = {
@@ -11,16 +13,11 @@ const customModalStyles = {
 };
 
 function ModalAddCardCode(props) {
-  function closeAddCardCodeModal() {
-    setProductIdForCardCode({});
-    setModalAddCardCodeOpen(false);
-  }
-
   return (
     <Modal
       isOpen={props.modalAddCardCodeOpen}
       // onAfterOpen={afterOpenModal}
-      onRequestClose={closeAddCardCodeModal}
+      onRequestClose={props.closeAddCardCodeModal}
       style={customModalStyles}
       contentLabel="AddBankAcc Modal"
       ariaHideApp={false}
@@ -29,10 +26,10 @@ function ModalAddCardCode(props) {
         <div className="modal-box-header">
           <div>
             <h2>เพิ่มรหัสบัตร</h2>
-            <h2>CardProduct Name: {productIdForCardCode.productName}</h2>
+            <h2>CardProduct Name: {props.productIdForCardCode.productName}</h2>
           </div>
           <CloseSquareOutlined
-            onClick={closeAddCardCodeModal}
+            onClick={props.closeAddCardCodeModal}
             className="modal-box-header-close-btn"
           />
         </div>
@@ -42,18 +39,18 @@ function ModalAddCardCode(props) {
             type="text"
             className="modal-box-form-addCardCode-table-input"
             name="cardNumber"
-            onChange={handlerInputChange}
+            onChange={props.handlerInputChange}
           />
 
-          {errorAddCardCode.err && (
+          {props.errorAddCardCode.err && (
             <span className="modal-box-error-box">
-              <h4>{errorAddCardCode.err}</h4>
+              <h4>{props.errorAddCardCode.err}</h4>
             </span>
           )}
           <button
             type="submit"
             className="modal-box-form-submit-btn"
-            onClick={handlerSubmitAddCardCode}
+            onClick={props.handlerSubmitAddCardCode}
           >
             ยืนยันการเพิ่มรหัสบัตร
           </button>
