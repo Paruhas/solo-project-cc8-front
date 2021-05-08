@@ -19,7 +19,7 @@ function ModalAddCardCode(props) {
       // onAfterOpen={afterOpenModal}
       onRequestClose={props.closeAddCardCodeModal}
       style={customModalStyles}
-      contentLabel="AddBankAcc Modal"
+      contentLabel="AddCardCode Modal"
       ariaHideApp={false}
     >
       <div className="modal-box">

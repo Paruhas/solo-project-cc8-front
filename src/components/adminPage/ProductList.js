@@ -13,6 +13,18 @@ import ProductListItem from "./ProductListItem";
 
 const isNumbers = /^\d*$/;
 
+// Add CardProduct
+import Modal from "react-modal";
+const customModalStyles = {
+  content: {
+    width: "max-content",
+    margin: "auto",
+    height: "max-content",
+  },
+};
+
+import Loading from "../item/Loading";
+
 function ProductList() {
   const [productLists, setProductLists] = useState();
   const [cardCodeLists, setCardCodeLists] = useState();
@@ -246,6 +258,124 @@ function ProductList() {
     }
   };
 
+  // Add CardProduct
+  // Modal Edit CardProduct
+  const [modalAddCardProductOpen, setModalAddCardProductOpen] = useState(false);
+  const [uploadImageAddCardProduct, setUploadImageAddCardProduct] = useState(
+    null
+  );
+  const [inputAddCardProduct, setInputAddCardProduct] = useState({
+    name: "",
+    price: "",
+  });
+
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [errorEditCardCode, setErrorEditCardCode] = useState({});
+
+  const handlerUploadImageAddCardProduct = (e) => {
+    // console.log(e.target.files[0]);
+    if (e.target.files[0]) {
+      setUploadImageEdit(e.target.files[0]);
+    } else {
+      setUploadImageEdit(null);
+    }
+  };
+
+  // function openAddCardProductModal(e, item) {
+  function openAddCardProductModal() {
+    // console.log(item);
+    // setProductIdForCardCode({
+    //   productId: item.id,
+    //   productImg: item.img,
+    //   productName: item.name,
+    //   productPrice: item.price,
+    // });
+    console.log("click");
+    setModalAddCardProductOpen(true);
+  }
+  // console.log(productIdForCardCode);
+
+  function closeAddCardProductModal() {
+    // setProductIdForCardCode({});
+    setModalAddCardProductOpen(false);
+    setUploadImageAddCardProduct(null);
+    setInputAddCardProduct({
+      name: "",
+      price: "",
+    });
+    setErrorEditCardCode({});
+  }
+
+  const handlerAddCardProductInputChange = (e) => {
+    const { name, value } = e.target;
+    setInputEditCardCode((prev) => ({ ...prev, [name]: value }));
+  };
+  // console.log(inputEditCardCode);
+
+  const handlerSubmitAddCardProduct = async (e) => {
+    e.preventDefault();
+    try {
+      // return;
+      // console.log(uploadImageEdit);
+      // console.log(inputEditCardCode);
+
+      //validate
+      if (!uploadImageEdit) {
+        throw Error("กรุณาอัพโหลด รูปภาพ");
+      }
+      if (!inputEditCardCode.editName || !inputEditCardCode.editName.trim()) {
+        throw Error("กรุณากรอก ชื่อสินค้า");
+      }
+      if (!inputEditCardCode.editPrice || !inputEditCardCode.editPrice.trim()) {
+        throw Error("กรุณากรอก ราคาสินค้า");
+      }
+      if (!isNumbers.test(inputEditCardCode.editPrice)) {
+        throw Error("กรุณากรอก ราคาสินค้าแค่ตัวเลขเท่านั้น");
+      }
+
+      setIsLoading(true);
+
+      const formData = new FormData(); // ทำให้เป็น multipart from data เพื่อให้ axios ตรวจจับได้ง่ายๆ
+      formData.append("image", uploadImageEdit);
+      const uploadEditImage = await axios
+        .post("upload/product", formData)
+        .then(async (res) => {
+          // console.log(res);
+          // console.log(res.data.cardProductImg);
+          const editCardProduct = await axios
+            .patch("card-products/edit/" + productIdForCardCode.productId, {
+              img: res.data.cardProductImg,
+              name: inputEditCardCode.editName,
+              price: inputEditCardCode.editPrice,
+            })
+            .then((editCardProduct) => {
+              // console.log(editCardProduct);
+              if (editCardProduct) {
+                setErrorEditCardCode({});
+              }
+              setIsLoading(false);
+              window.alert("แก้ไขสินค้าสำเร็จ");
+              location.reload();
+            });
+        });
+    } catch (err) {
+      console.log(err);
+      // console.dir(err.response.data.message);
+      setIsLoading(false);
+      if (err.response) {
+        setErrorEditCardCode((prev) => ({
+          ...prev,
+          err: err.response.data.message,
+        }));
+      } else {
+        setErrorEditCardCode((prev) => ({
+          ...prev,
+          err: err.message,
+        }));
+      }
+    }
+  };
+
   return (
     <>
       <div className="content-center-admin-firstBox">
@@ -303,7 +433,10 @@ function ProductList() {
           )}
 
           <div className="content-center-profile-admin-firstBox-footer">
-            <button className="content-center-profile-admin-firstBox-footer-btn-add">
+            <button
+              className="content-center-profile-admin-firstBox-footer-btn-add"
+              onClick={openAddCardProductModal}
+            >
               <PlusOutlined /> Add CardProduct
             </button>
           </div>
@@ -331,6 +464,110 @@ function ProductList() {
         handlerSubmitEditCardCode={handlerSubmitEditCardCode}
         isLoading={isLoading}
       />
+
+      <Modal
+        isOpen={modalAddCardProductOpen}
+        // onAfterOpen={afterOpenModal}
+        onRequestClose={closeAddCardProductModal}
+        style={customModalStyles}
+        contentLabel="AddCardProduct Modal"
+        ariaHideApp={false}
+      >
+        <div className="modal-box">
+          <div className="modal-box-header">
+            <div>
+              <h2>เพิ่มสินค้า</h2>
+            </div>
+            <CloseSquareOutlined
+              onClick={closeAddCardProductModal}
+              className="modal-box-header-close-btn"
+            />
+          </div>
+          <hr className="loginPage-form-div-hr" />
+
+          <form className="modal-box-form">
+            <table className="modal-box-form-payment-table-input">
+              <tbody>
+                <tr>
+                  <td className="modal-box-form-payment-table-text">
+                    <div className="modal-box-form-payment-table-imgPre-box">
+                      {/* {props.uploadImageEdit === null ? (
+                        <div className="modal-box-form-payment-table-imgPre-box-text">
+                          ภาพตัวอย่างจะแสดงตรงนี้
+                        </div>
+                      ) : ( */}
+                      <div className="modal-box-form-payment-table-imgPre-box-text-zIndex">
+                        ภาพตัวอย่างจะแสดงตรงนี้
+                      </div>
+                      {/* )} */}
+                      <img
+                        // src={
+                        //   props.uploadImageEdit === null
+                        //     ? ""
+                        //     : URL.createObjectURL(props.uploadImageEdit)
+                        // }
+                        className="modal-box-form-payment-table-imgPre-box-img"
+                      />
+                    </div>
+                  </td>
+                  <td>
+                    <label htmlFor="edit-image">รูปภาพสินค้า</label>
+                    <input
+                      type="file"
+                      id="edit-image"
+                      className="modal-box-form-payment-table-input-img"
+                      name="editImage"
+                      // onChange={props.handlerUploadImageEdit}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="modal-box-form-payment-table-text">
+                    <label htmlFor="edit-name">ชื่อสินค้า</label>
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      id="edit-name"
+                      className="modal-box-form-payment-table-input"
+                      name="editName"
+                      // onChange={props.handlerEditInputChange}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="modal-box-form-payment-table-text">
+                    <label htmlFor="edit-price">ราคา</label>
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      id="edit-price"
+                      className="modal-box-form-payment-table-input"
+                      name="editPrice"
+                      // onChange={props.handlerEditInputChange}
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            {/* {props.errorEditCardCode.err && (
+            <span className="modal-box-error-box">
+              <h4>{props.errorEditCardCode.err}</h4>
+            </span>
+          )} */}
+            {/* {props.isLoading && <Loading />} */}
+            <button
+              type="submit"
+              className="modal-box-form-submit-btn"
+              // onClick={props.handlerSubmitEditCardCode}
+            >
+              ยืนยันการเพิ่มสินค้า
+            </button>
+          </form>
+        </div>
+      </Modal>
     </>
   );
 }
