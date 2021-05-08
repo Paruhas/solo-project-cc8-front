@@ -44,12 +44,12 @@ function OrderHistoryBoxFooter(props) {
   };
 
   const handlerPaymentDate = (e) => {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     setPaymentDate(e.target.value);
   };
 
   const handlerPaymentTime = (e) => {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     setPaymentTime(e.target.value);
   };
 

@@ -50,12 +50,12 @@ function ModalEditCardCode(props) {
             <tr>
               <td>
                 <img
-                  src={props.productIdForCardCode.productImg}
+                  src={props.productIdForCardCode?.productImg}
                   className="modal-box-form-editCardProduct-table-img"
                 />
               </td>
-              <td>{props.productIdForCardCode.productName}</td>
-              <td>{props.productIdForCardCode.productPrice} บาท</td>
+              <td>{props.productIdForCardCode?.productName}</td>
+              <td>{props.productIdForCardCode?.productPrice} บาท</td>
             </tr>
           </tbody>
         </table>

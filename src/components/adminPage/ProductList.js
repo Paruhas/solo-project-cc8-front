@@ -9,6 +9,7 @@ import axios from "../../configs/axios";
 
 import ModalAddCardCode from "./ModalAddCardCode";
 import ModalEditCardCode from "./ModalEditCardCode";
+import ProductListItem from "./ProductListItem";
 
 const isNumbers = /^\d*$/;
 
@@ -277,57 +278,19 @@ function ProductList() {
 
               {productLists?.map((item, index) => {
                 return (
-                  <tr key={item.id}>
-                    <td className="content-center-profile-admin-firstBox-table-row1">
-                      {index + 1}
-                    </td>
-                    <td className="content-center-profile-admin-firstBox-table-row2">
-                      <div className="content-center-profile-admin-firstBox-table-row2-div">
-                        <img
-                          src={item.img}
-                          alt={"item"}
-                          className="content-center-profile-admin-firstBox-table-row2-div-img"
-                        />
-                      </div>
-                    </td>
-                    <td className="content-center-profile-admin-firstBox-table-row3">
-                      {item.name}
-                    </td>
-                    <td className="content-center-profile-admin-firstBox-table-row4">
-                      {item.price + " บาท"}
-                    </td>
-                    <td className="content-center-profile-admin-firstBox-table-row5">
-                      {
-                        cardCodeLists?.cardCodes.filter((item1, index1) => {
-                          return item1.cardProductId == item.id;
-                        }).length
-                      }
-                    </td>
-                    <td className="content-center-profile-admin-firstBox-table-row6">
-                      <div className="content-center-profile-admin-firstBox-table-btn-group">
-                        <button
-                          className="content-center-profile-admin-firstBox-table-btn-add"
-                          onClick={(e) =>
-                            openAddCardCodeModal(e, item.id, item.name)
-                          }
-                        >
-                          <PlusOutlined /> Add CardCode
-                        </button>
-                        <button
-                          className="content-center-profile-admin-firstBox-table-btn-edit"
-                          onClick={(e) => openEditCardCodeModal(e, item)}
-                        >
-                          <ToolFilled /> Edit
-                        </button>
-                        <button
-                          className="content-center-profile-admin-firstBox-table-btn-delete"
-                          onClick={(e) => handlerDeleteProduct(e, item.id)}
-                        >
-                          <DeleteFilled /> Delete
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
+                  <ProductListItem
+                    key={item.id}
+                    id={item.id}
+                    index={index}
+                    img={item.img}
+                    name={item.name}
+                    price={item.price}
+                    cardCodeLists={cardCodeLists}
+                    openAddCardCodeModal={openAddCardCodeModal}
+                    openEditCardCodeModal={openEditCardCodeModal}
+                    item={item}
+                    handlerDeleteProduct={handlerDeleteProduct}
+                  />
                 );
               })}
             </tbody>
