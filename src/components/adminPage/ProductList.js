@@ -8,7 +8,7 @@ import {
 import axios from "../../configs/axios";
 
 import Modal from "react-modal";
-import Loading from "../Loading";
+
 const customModalStyles = {
   content: {
     width: "max-content",
@@ -16,6 +16,10 @@ const customModalStyles = {
     height: "max-content",
   },
 };
+
+import Loading from "../item/Loading";
+
+import ModalAddCardCode from "./ModalAddCardCode";
 
 function ProductList() {
   const [productLists, setProductLists] = useState();
@@ -343,49 +347,7 @@ function ProductList() {
         </div>
       </div>
 
-      <Modal
-        isOpen={modalAddCardCodeOpen}
-        // onAfterOpen={afterOpenModal}
-        onRequestClose={closeAddCardCodeModal}
-        style={customModalStyles}
-        contentLabel="AddBankAcc Modal"
-        ariaHideApp={false}
-      >
-        <div className="modal-box">
-          <div className="modal-box-header">
-            <div>
-              <h2>เพิ่มรหัสบัตร</h2>
-              <h2>CardProduct Name: {productIdForCardCode.productName}</h2>
-            </div>
-            <CloseSquareOutlined
-              onClick={closeAddCardCodeModal}
-              className="modal-box-header-close-btn"
-            />
-          </div>
-
-          <form className="modal-box-form">
-            <input
-              type="text"
-              className="modal-box-form-addCardCode-table-input"
-              name="cardNumber"
-              onChange={handlerInputChange}
-            />
-
-            {errorAddCardCode.err && (
-              <span className="modal-box-error-box">
-                <h4>{errorAddCardCode.err}</h4>
-              </span>
-            )}
-            <button
-              type="submit"
-              className="modal-box-form-submit-btn"
-              onClick={handlerSubmitAddCardCode}
-            >
-              ยืนยันการเพิ่มรหัสบัตร
-            </button>
-          </form>
-        </div>
-      </Modal>
+      <ModalAddCardCode modalAddCardCodeOpen={modalAddCardCodeOpen} />
 
       <Modal
         isOpen={modalEditCardCodeOpen}

@@ -16,6 +16,9 @@ function OrderHistoryBox() {
   async function decodeToken() {
     try {
       const decodedUserData = await jwt_decode(getToken());
+      if (decodedUserData.roleAdmin === "ADMIN") {
+        return;
+      }
       const resOrderHistory = await axios.get(
         "/orders/user/" + decodedUserData.id
       );

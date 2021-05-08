@@ -6,12 +6,31 @@ import HomepageItem from "../components/homepage/HomepageItem";
 import HomepageItemDummy from "../components/homepage/HomepageItemDummy";
 import HomepageItemDummyRespon from "../components/homepage/HomepageItemDummyRespon";
 
+import { getToken } from "../services/localStorageService";
+import jwt_decode from "jwt-decode";
+import { useHistory } from "react-router";
+
 function Homepage() {
   const [availableItem, setAvailableItem] = useState();
 
+  const history = useHistory();
+
   useEffect(async () => {
+    await roleIsAdmin();
     await fetchAvailableItem();
   }, []);
+
+  async function roleIsAdmin() {
+    try {
+      const decodedUserData = await jwt_decode(getToken());
+      console.log(decodedUserData.roleAdmin);
+      if (decodedUserData.roleAdmin === "ADMIN") {
+        history.push("/admin");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   async function fetchAvailableItem() {
     try {

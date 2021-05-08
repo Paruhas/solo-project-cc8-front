@@ -1,11 +1,32 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import Header from "../components/headerBar/Header";
 import EditProfile from "../components/profilePage/EditProfile";
 import EditPassword from "../components/profilePage/EditPassword";
 import OrderHistoryBox from "../components/orderHistory/OrderHistoryBox";
 
+import { useHistory } from "react-router";
+import { getToken } from "../services/localStorageService";
+import jwt_decode from "jwt-decode";
+
 function ProfilePage() {
+  const history = useHistory();
+
+  useEffect(async () => {
+    await roleIsAdmin();
+  }, []);
+
+  async function roleIsAdmin() {
+    try {
+      const decodedUserData = await jwt_decode(getToken());
+      // console.log(decodedUserData.roleAdmin);
+      if (decodedUserData.roleAdmin === "ADMIN") {
+        history.push("/admin");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
   return (
     <div className="root">
       <Header />
