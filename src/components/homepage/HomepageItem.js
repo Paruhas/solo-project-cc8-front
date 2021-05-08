@@ -1,29 +1,39 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContextProvider";
 
+const isNumbers = /^\d*$/;
+
 function HomepageItem(props) {
   const { cartItem, setCartItem } = useContext(AuthContext);
   const [itemNumber, setItemNumber] = useState(1);
 
   const handlerAddToCart = (e) => {
     e.preventDefault();
-    setCartItem(cartItem + itemNumber);
+    setCartItem(cartItem + +itemNumber);
   };
 
   const handlerItemNumberSubtract = () => {
     itemNumber === 1 ? setItemNumber(1) : setItemNumber(itemNumber - 1);
   };
 
+  // ปิดไว้ เพราะไม่สามารถ validate ถ้าใส่ไม่ใช่ตัวเลข, ใส่ 0, ใส่ . แล้วค่าห้ามเปลี่ยนได้
   const handlerItemNumberChange = (e) => {
-    if (e.target.value > props.CardCodes.length) {
-      setItemNumber(+props.CardCodes.length);
-    } else {
-      setItemNumber(+e.target.value);
-    }
-
-    if (e.target.value !== Number) {
-      setItemNumber(itemNumber);
-    }
+    // console.log(e);
+    // console.log(e.target.value);
+    // if (e.target.value == 0) {
+    //   console.log("equal 0");
+    //   setItemNumber(+e.target.value + 1);
+    // }
+    // const value = e.target.value.replace(/[^\d]/, "");
+    // if (e.target.value > props.CardCodes.length) {
+    //   console.log("1");
+    //   setItemNumber(+props.CardCodes.length);
+    // } else if (parseInt(value) !== 0) {
+    //   console.log("2");
+    //   setItemNumber(value);
+    // } else {
+    //   setItemNumber(+e.target.value);
+    // }
   };
 
   const handlerItemNumberIncrement = () => {
@@ -49,6 +59,12 @@ function HomepageItem(props) {
             -
           </button>
           <input
+            type="text"
+            // min="1"
+            // step="0.01"
+            // onKeyPress={(e) => {
+            //   return e.charCode >= 48 && e.charCode <= 57;
+            // }}
             className="button-group-number"
             value={itemNumber}
             onChange={handlerItemNumberChange}

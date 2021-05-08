@@ -44,7 +44,6 @@ function AdminPage() {
 
           <div className="content-center-admin">
             <ProductList />
-
             <BankAccList />
           </div>
 

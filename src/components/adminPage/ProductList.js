@@ -8,6 +8,7 @@ import {
 import axios from "../../configs/axios";
 
 import Modal from "react-modal";
+import Loading from "../Loading";
 const customModalStyles = {
   content: {
     width: "max-content",
@@ -132,11 +133,17 @@ function ProductList() {
   // Edit CardCode
   // Modal Edit CardCode
   const [modalEditCardCodeOpen, setModalEditCardCodeOpen] = useState(false);
-
   const [uploadImageEdit, setUploadImageEdit] = useState(null);
+  const [inputEditCardCode, setInputEditCardCode] = useState({
+    editName: "",
+    editPrice: "",
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorEditCardCode, setErrorEditCardCode] = useState({});
 
   const handlerUploadImageEdit = (e) => {
-    console.log(e.target.files[0]);
+    // console.log(e.target.files[0]);
     if (e.target.files[0]) {
       setUploadImageEdit(e.target.files[0]);
     } else {
@@ -159,20 +166,19 @@ function ProductList() {
   function closeEditCardCodeModal() {
     setProductIdForCardCode({});
     setModalEditCardCodeOpen(false);
+    setUploadImageEdit(null);
+    setInputEditCardCode({
+      editName: "",
+      editPrice: "",
+    });
+    setErrorEditCardCode({});
   }
-
-  const [inputEditCardCode, setInputEditCardCode] = useState({
-    editName: "",
-    editPrice: "",
-  });
 
   const handlerEditInputChange = (e) => {
     const { name, value } = e.target;
     setInputEditCardCode((prev) => ({ ...prev, [name]: value }));
   };
-  console.log(inputEditCardCode);
-
-  const [errorEditCardCode, setErrorEditCardCode] = useState({});
+  // console.log(inputEditCardCode);
 
   const handlerSubmitEditCardCode = async (e) => {
     e.preventDefault();
@@ -192,6 +198,8 @@ function ProductList() {
         throw Error("กรุณากรอก ราคาสินค้า");
       }
 
+      setIsLoading(true);
+
       const formData = new FormData(); // ทำให้เป็น multipart from data เพื่อให้ axios ตรวจจับได้ง่ายๆ
       formData.append("image", uploadImageEdit);
       const uploadEditImage = await axios
@@ -210,13 +218,15 @@ function ProductList() {
               if (editCardProduct) {
                 setErrorEditCardCode({});
               }
+              setIsLoading(false);
               window.alert("แก้ไขสินค้าสำเร็จ");
               location.reload();
             });
         });
     } catch (err) {
       console.log(err);
-      console.dir(err.response.data.message);
+      // console.dir(err.response.data.message);
+      setIsLoading(false);
       if (err.response) {
         setErrorEditCardCode((prev) => ({
           ...prev,
@@ -495,6 +505,7 @@ function ProductList() {
                 <h4>{errorEditCardCode.err}</h4>
               </span>
             )}
+            {isLoading && <Loading />}
             <button
               type="submit"
               className="modal-box-form-submit-btn"
