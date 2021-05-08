@@ -7,19 +7,10 @@ import {
 } from "@ant-design/icons";
 import axios from "../../configs/axios";
 
-import Modal from "react-modal";
-
-const customModalStyles = {
-  content: {
-    width: "max-content",
-    margin: "auto",
-    height: "max-content",
-  },
-};
-
-import Loading from "../item/Loading";
-
 import ModalAddCardCode from "./ModalAddCardCode";
+import ModalEditCardCode from "./ModalEditCardCode";
+
+const isNumbers = /^\d*$/;
 
 function ProductList() {
   const [productLists, setProductLists] = useState();
@@ -73,7 +64,12 @@ function ProductList() {
   // Add CardCode
   // Modal Add CardCode
   const [modalAddCardCodeOpen, setModalAddCardCodeOpen] = useState(false);
-  const [productIdForCardCode, setProductIdForCardCode] = useState({});
+  const [productIdForCardCode, setProductIdForCardCode] = useState({
+    productId: "",
+    productImg: "",
+    productName: "",
+    productPrice: "",
+  });
 
   const [inputAddCardCode, setInputAddCardCode] = useState({
     cardNumber: "",
@@ -202,6 +198,9 @@ function ProductList() {
       if (!inputEditCardCode.editPrice || !inputEditCardCode.editPrice.trim()) {
         throw Error("กรุณากรอก ราคาสินค้า");
       }
+      if (!isNumbers.test(inputEditCardCode.editPrice)) {
+        throw Error("กรุณากรอก ราคาสินค้าแค่ตัวเลขเท่านั้น");
+      }
 
       setIsLoading(true);
 
@@ -219,7 +218,7 @@ function ProductList() {
               price: inputEditCardCode.editPrice,
             })
             .then((editCardProduct) => {
-              console.log(editCardProduct);
+              // console.log(editCardProduct);
               if (editCardProduct) {
                 setErrorEditCardCode({});
               }
@@ -349,143 +348,26 @@ function ProductList() {
       </div>
 
       <ModalAddCardCode
-        closeAddCardCodeModal={closeAddCardCodeModal}
         modalAddCardCodeOpen={modalAddCardCodeOpen}
+        closeAddCardCodeModal={closeAddCardCodeModal}
         productIdForCardCode={productIdForCardCode}
+        setProductIdForCardCode={setProductIdForCardCode}
         errorAddCardCode={errorAddCardCode}
         handlerSubmitAddCardCode={handlerSubmitAddCardCode}
         handlerInputChange={handlerInputChange}
       />
 
-      <Modal
-        isOpen={modalEditCardCodeOpen}
-        // onAfterOpen={afterOpenModal}
-        onRequestClose={closeEditCardCodeModal}
-        style={customModalStyles}
-        contentLabel="AddBankAcc Modal"
-        ariaHideApp={false}
-      >
-        <div className="modal-box">
-          <div className="modal-box-header">
-            <div>
-              <h2>แก้ไขสินค้า</h2>
-            </div>
-            <CloseSquareOutlined
-              onClick={closeEditCardCodeModal}
-              className="modal-box-header-close-btn"
-            />
-          </div>
-          <hr className="loginPage-form-div-hr" />
-          <h3>ข้อมูลเดิม</h3>
-          <table className="modal-box-form-editCardProduct-table">
-            <tbody>
-              <tr>
-                <td>
-                  <h4>รูปภาพสินค้าเดิม</h4>
-                </td>
-                <td>
-                  <h4>ชื่อสินค้าเดิม</h4>
-                </td>
-                <td>
-                  <h4>ราคาสินค้าเดิม</h4>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <img
-                    src={productIdForCardCode.productImg}
-                    className="modal-box-form-editCardProduct-table-img"
-                  />
-                </td>
-                <td>{productIdForCardCode.productName}</td>
-                <td>{productIdForCardCode.productPrice} บาท</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <form className="modal-box-form">
-            <table className="modal-box-form-payment-table-input">
-              <tbody>
-                <tr>
-                  <td className="modal-box-form-payment-table-text">
-                    <div className="modal-box-form-payment-table-imgPre-box">
-                      {uploadImageEdit === null ? (
-                        <div className="modal-box-form-payment-table-imgPre-box-text">
-                          ภาพตัวอย่างจะแสดงตรงนี้
-                        </div>
-                      ) : (
-                        <div className="modal-box-form-payment-table-imgPre-box-text-zIndex">
-                          ภาพตัวอย่างจะแสดงตรงนี้
-                        </div>
-                      )}
-                      <img
-                        src={
-                          uploadImageEdit === null
-                            ? ""
-                            : URL.createObjectURL(uploadImageEdit)
-                        }
-                        className="modal-box-form-payment-table-imgPre-box-img"
-                      />
-                    </div>
-                  </td>
-                  <td>
-                    <label htmlFor="edit-image">เปลี่ยนรูปภาพสินค้า</label>
-                    <input
-                      type="file"
-                      id="edit-image"
-                      className="modal-box-form-payment-table-input-img"
-                      name="editImage"
-                      onChange={handlerUploadImageEdit}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td className="modal-box-form-payment-table-text">
-                    <label htmlFor="edit-name">ชื่อสินค้า</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      id="edit-name"
-                      className="modal-box-form-payment-table-input"
-                      name="editName"
-                      onChange={handlerEditInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td className="modal-box-form-payment-table-text">
-                    <label htmlFor="edit-price">ราคา</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      id="edit-price"
-                      className="modal-box-form-payment-table-input"
-                      name="editPrice"
-                      onChange={handlerEditInputChange}
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-            {errorEditCardCode.err && (
-              <span className="modal-box-error-box">
-                <h4>{errorEditCardCode.err}</h4>
-              </span>
-            )}
-            {isLoading && <Loading />}
-            <button
-              type="submit"
-              className="modal-box-form-submit-btn"
-              onClick={handlerSubmitEditCardCode}
-            >
-              ยืนยันการแก้ไขสินค้า
-            </button>
-          </form>
-        </div>
-      </Modal>
+      <ModalEditCardCode
+        modalEditCardCodeOpen={modalEditCardCodeOpen}
+        closeEditCardCodeModal={closeEditCardCodeModal}
+        productIdForCardCode={productIdForCardCode}
+        uploadImageEdit={uploadImageEdit}
+        errorEditCardCode={errorEditCardCode}
+        handlerUploadImageEdit={handlerUploadImageEdit}
+        handlerEditInputChange={handlerEditInputChange}
+        handlerSubmitEditCardCode={handlerSubmitEditCardCode}
+        isLoading={isLoading}
+      />
     </>
   );
 }

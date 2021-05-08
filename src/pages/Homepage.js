@@ -23,7 +23,7 @@ function Homepage() {
   async function roleIsAdmin() {
     try {
       const decodedUserData = await jwt_decode(getToken());
-      console.log(decodedUserData.roleAdmin);
+      // console.log(decodedUserData.roleAdmin);
       if (decodedUserData.roleAdmin === "ADMIN") {
         history.push("/admin");
       }
