@@ -26,7 +26,7 @@ function ModalAddCardCode(props) {
         <div className="modal-box-header">
           <div>
             <h2>เพิ่มรหัสบัตร</h2>
-            <h2>CardProduct Name: {props.productIdForCardCode?.productName}</h2>
+            <h2>CardProduct Name: {props.cardProductDetail?.productName}</h2>
           </div>
           <CloseSquareOutlined
             onClick={props.closeAddCardCodeModal}
@@ -37,14 +37,15 @@ function ModalAddCardCode(props) {
         <form className="modal-box-form">
           <input
             type="text"
+            id="card-number"
             className="modal-box-form-addCardCode-table-input"
             name="cardNumber"
             onChange={props.handlerInputChange}
           />
 
-          {props.errorAddCardCode?.err && (
+          {props.errorModal?.err && (
             <span className="modal-box-error-box">
-              <h4>{props.errorAddCardCode?.err}</h4>
+              <h4>{props.errorModal?.err}</h4>
             </span>
           )}
           <button

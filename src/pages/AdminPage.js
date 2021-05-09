@@ -6,6 +6,8 @@ import axios from "../configs/axios";
 
 import ProductList from "../components/adminPage/ProductList";
 import BankAccList from "../components/adminPage/BankAccList";
+import ApprovePayment from "../components/adminPage/ApprovePayment";
+
 import { getToken } from "../services/localStorageService";
 import jwt_decode from "jwt-decode";
 import { useHistory } from "react-router";
@@ -44,7 +46,8 @@ function AdminPage() {
 
           <div className="content-center-admin">
             <ProductList />
-            <BankAccList />
+            {/* <BankAccList /> */}
+            <ApprovePayment />
           </div>
 
           <div className="content-right"></div>

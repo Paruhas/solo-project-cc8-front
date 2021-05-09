@@ -1,34 +1,18 @@
 import React, { useEffect, useState } from "react";
-import {
-  PlusOutlined,
-  ToolFilled,
-  DeleteFilled,
-  CloseSquareOutlined,
-} from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import axios from "../../configs/axios";
 
-import ModalAddCardCode from "./ModalAddCardCode";
-import ModalEditCardCode from "./ModalEditCardCode";
 import ProductListItem from "./ProductListItem";
 
 const isNumbers = /^\d*$/;
 
-// Add CardProduct
-import Modal from "react-modal";
-const customModalStyles = {
-  content: {
-    width: "max-content",
-    margin: "auto",
-    height: "max-content",
-  },
-};
-
-import Loading from "../item/Loading";
+import ModalAddCardCode from "../Modal/ModalAddCardCode";
+import ModalEditCardCode from "../Modal/ModalEditCardProduct";
+import ModalAddCardProduct from "../Modal/ModalAddCardProduct";
 
 function ProductList() {
   const [productLists, setProductLists] = useState();
   const [cardCodeLists, setCardCodeLists] = useState();
-
   const [errorProduct, setErrorProduct] = useState({});
 
   useEffect(async () => {
@@ -59,68 +43,66 @@ function ProductList() {
         await axios.patch("card-products/delete/" + productId, {
           isDeleted: "DELETED",
         });
-        getProducts();
+        setErrorProduct({});
+        window.alert("ลบสินค้าเรียบร้อย");
         location.reload();
       }
     } catch (err) {
       console.log(err);
       if (err.response) {
-        // console.log(err.response)
         setErrorProduct((prev) => ({
           ...prev,
           err: err.response.data.message,
+        }));
+      } else {
+        setErrorProduct((prev) => ({
+          ...prev,
+          err: err.message,
         }));
       }
     }
   };
 
-  // Add CardCode
   // Modal Add CardCode
   const [modalAddCardCodeOpen, setModalAddCardCodeOpen] = useState(false);
-  const [productIdForCardCode, setProductIdForCardCode] = useState({
-    productId: "",
-    productImg: "",
-    productName: "",
-    productPrice: "",
-  });
+  const [cardProductDetail, setCardProductDetail] = useState({});
 
-  const [inputAddCardCode, setInputAddCardCode] = useState({
-    cardNumber: "",
-  });
+  const [input, setInput] = useState({});
+  const [errorModal, setErrorModal] = useState({});
 
-  const [errorAddCardCode, setErrorAddCardCode] = useState({});
-
-  function openAddCardCodeModal(e, productId, productName) {
-    setProductIdForCardCode({ productId, productName });
+  function openAddCardCodeModal(e, item) {
+    // console.log(e);
+    // console.log(item);
+    setCardProductDetail({ productId: item.id, productName: item.name });
     setModalAddCardCodeOpen(true);
   }
-  // console.log(productIdForCardCode);
+  // console.log(cardProductDetail);
 
   function closeAddCardCodeModal() {
-    setProductIdForCardCode({});
+    setCardProductDetail({});
+    setInput({});
+    setErrorModal({});
     setModalAddCardCodeOpen(false);
-    setErrorAddCardCode({});
   }
 
   const handlerInputChange = (e) => {
-    setInputAddCardCode({
-      cardNumber: e.target.value,
-    });
+    const { name, value } = e.target;
+    setInput((prev) => ({ ...prev, [name]: value }));
   };
-  // console.log(inputAddCardCode);
+  // console.log(input, "input");
 
   const handlerSubmitAddCardCode = async (e) => {
     e.preventDefault();
     try {
       //validate
-      if (!inputAddCardCode.cardNumber || !inputAddCardCode.cardNumber.trim()) {
+      if (!input.cardNumber || !input.cardNumber.trim()) {
         throw new Error("กรุณา กรอกรหัสของ CardCode ลงในช่อง");
       }
 
       const addCardCodeRes = await axios.post(
-        "/card-code/" + productIdForCardCode.productId,
+        "/card-code/" + cardProductDetail.productId,
         {
-          codeNumbers: [{ codeNumber: inputAddCardCode.cardNumber }],
+          codeNumbers: [{ codeNumber: input.cardNumber }],
         }
       );
       // console.log(addCardCodeRes);
@@ -131,12 +113,12 @@ function ProductList() {
       console.log(err);
       // console.dir(err.response.data.message);
       if (err.response) {
-        setErrorAddCardCode((prev) => ({
+        setErrorModal((prev) => ({
           ...prev,
           err: err.response.data.message,
         }));
       } else {
-        setErrorAddCardCode((prev) => ({
+        setErrorModal((prev) => ({
           ...prev,
           err: err.message,
         }));
@@ -144,96 +126,83 @@ function ProductList() {
     }
   };
 
-  // Edit CardCode
   // Modal Edit CardCode
-  const [modalEditCardCodeOpen, setModalEditCardCodeOpen] = useState(false);
-  const [uploadImageEdit, setUploadImageEdit] = useState(null);
-  const [inputEditCardCode, setInputEditCardCode] = useState({
-    editName: "",
-    editPrice: "",
-  });
-
+  const [modalEditCardProductOpen, setModalEditCardProductOpen] = useState(
+    false
+  );
+  const [uploadImage, setUploadImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [errorEditCardCode, setErrorEditCardCode] = useState({});
 
-  const handlerUploadImageEdit = (e) => {
+  const handlerUploadImage = (e) => {
     // console.log(e.target.files[0]);
     if (e.target.files[0]) {
-      setUploadImageEdit(e.target.files[0]);
+      setUploadImage(e.target.files[0]);
     } else {
-      setUploadImageEdit(null);
+      setUploadImage(null);
     }
   };
+  // console.log(uploadImage, "uploadImage");
 
-  function openEditCardCodeModal(e, item) {
+  function openEditCardProductModal(e, item) {
+    // console.log(e);
     // console.log(item);
-    setProductIdForCardCode({
+    setCardProductDetail({
       productId: item.id,
       productImg: item.img,
       productName: item.name,
       productPrice: item.price,
     });
-    setModalEditCardCodeOpen(true);
+    setModalEditCardProductOpen(true);
   }
-  // console.log(productIdForCardCode);
+  // console.log(cardProductDetail);
 
-  function closeEditCardCodeModal() {
-    setProductIdForCardCode({});
-    setModalEditCardCodeOpen(false);
-    setUploadImageEdit(null);
-    setInputEditCardCode({
-      editName: "",
-      editPrice: "",
-    });
-    setErrorEditCardCode({});
+  function closeEditCardProductModal() {
+    setCardProductDetail({});
+    setUploadImage(null);
+    setInput({});
+    setErrorModal({});
+    setModalEditCardProductOpen(false);
   }
 
-  const handlerEditInputChange = (e) => {
-    const { name, value } = e.target;
-    setInputEditCardCode((prev) => ({ ...prev, [name]: value }));
-  };
-  // console.log(inputEditCardCode);
-
-  const handlerSubmitEditCardCode = async (e) => {
+  const handlerSubmitEditCardProduct = async (e) => {
     e.preventDefault();
     try {
-      // return;
-      // console.log(uploadImageEdit);
-      // console.log(inputEditCardCode);
+      // console.log(uploadImage);
+      // console.log(input);
 
       //validate
-      if (!uploadImageEdit) {
+      if (!uploadImage) {
         throw Error("กรุณาอัพโหลด รูปภาพ");
       }
-      if (!inputEditCardCode.editName || !inputEditCardCode.editName.trim()) {
+      if (!input.editName || !input.editName.trim()) {
         throw Error("กรุณากรอก ชื่อสินค้า");
       }
-      if (!inputEditCardCode.editPrice || !inputEditCardCode.editPrice.trim()) {
+      if (!input.editPrice || !input.editPrice.trim()) {
         throw Error("กรุณากรอก ราคาสินค้า");
       }
-      if (!isNumbers.test(inputEditCardCode.editPrice)) {
+      if (!isNumbers.test(input.editPrice)) {
         throw Error("กรุณากรอก ราคาสินค้าแค่ตัวเลขเท่านั้น");
       }
 
       setIsLoading(true);
 
       const formData = new FormData(); // ทำให้เป็น multipart from data เพื่อให้ axios ตรวจจับได้ง่ายๆ
-      formData.append("image", uploadImageEdit);
+      formData.append("image", uploadImage);
       const uploadEditImage = await axios
         .post("upload/product", formData)
         .then(async (res) => {
           // console.log(res);
           // console.log(res.data.cardProductImg);
           const editCardProduct = await axios
-            .patch("card-products/edit/" + productIdForCardCode.productId, {
+            .patch("card-products/edit/" + cardProductDetail.productId, {
               img: res.data.cardProductImg,
-              name: inputEditCardCode.editName,
-              price: inputEditCardCode.editPrice,
+              name: input.editName,
+              price: input.editPrice,
             })
             .then((editCardProduct) => {
               // console.log(editCardProduct);
               if (editCardProduct) {
-                setErrorEditCardCode({});
+                setErrorModal({});
               }
               setIsLoading(false);
               window.alert("แก้ไขสินค้าสำเร็จ");
@@ -245,12 +214,12 @@ function ProductList() {
       // console.dir(err.response.data.message);
       setIsLoading(false);
       if (err.response) {
-        setErrorEditCardCode((prev) => ({
+        setErrorModal((prev) => ({
           ...prev,
           err: err.response.data.message,
         }));
       } else {
-        setErrorEditCardCode((prev) => ({
+        setErrorModal((prev) => ({
           ...prev,
           err: err.message,
         }));
@@ -258,103 +227,63 @@ function ProductList() {
     }
   };
 
-  // Add CardProduct
-  // Modal Edit CardProduct
+  // Modal Add CardProduct
   const [modalAddCardProductOpen, setModalAddCardProductOpen] = useState(false);
-  const [uploadImageAddCardProduct, setUploadImageAddCardProduct] = useState(
-    null
-  );
-  const [inputAddCardProduct, setInputAddCardProduct] = useState({
-    name: "",
-    price: "",
-  });
 
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [errorEditCardCode, setErrorEditCardCode] = useState({});
-
-  const handlerUploadImageAddCardProduct = (e) => {
-    // console.log(e.target.files[0]);
-    if (e.target.files[0]) {
-      setUploadImageEdit(e.target.files[0]);
-    } else {
-      setUploadImageEdit(null);
-    }
-  };
-
-  // function openAddCardProductModal(e, item) {
   function openAddCardProductModal() {
-    // console.log(item);
-    // setProductIdForCardCode({
-    //   productId: item.id,
-    //   productImg: item.img,
-    //   productName: item.name,
-    //   productPrice: item.price,
-    // });
-    console.log("click");
+    // console.log("click");
     setModalAddCardProductOpen(true);
   }
-  // console.log(productIdForCardCode);
 
   function closeAddCardProductModal() {
-    // setProductIdForCardCode({});
+    setUploadImage(null);
+    setInput({});
+    setErrorModal({});
     setModalAddCardProductOpen(false);
-    setUploadImageAddCardProduct(null);
-    setInputAddCardProduct({
-      name: "",
-      price: "",
-    });
-    setErrorEditCardCode({});
   }
-
-  const handlerAddCardProductInputChange = (e) => {
-    const { name, value } = e.target;
-    setInputEditCardCode((prev) => ({ ...prev, [name]: value }));
-  };
-  // console.log(inputEditCardCode);
 
   const handlerSubmitAddCardProduct = async (e) => {
     e.preventDefault();
     try {
-      // return;
-      // console.log(uploadImageEdit);
-      // console.log(inputEditCardCode);
+      // console.log(uploadImage);
+      // console.log(input);
 
       //validate
-      if (!uploadImageEdit) {
+      if (!uploadImage) {
         throw Error("กรุณาอัพโหลด รูปภาพ");
       }
-      if (!inputEditCardCode.editName || !inputEditCardCode.editName.trim()) {
+      if (!input.addName || !input.addName.trim()) {
         throw Error("กรุณากรอก ชื่อสินค้า");
       }
-      if (!inputEditCardCode.editPrice || !inputEditCardCode.editPrice.trim()) {
+      if (!input.addPrice || !input.addPrice.trim()) {
         throw Error("กรุณากรอก ราคาสินค้า");
       }
-      if (!isNumbers.test(inputEditCardCode.editPrice)) {
+      if (!isNumbers.test(input.addPrice)) {
         throw Error("กรุณากรอก ราคาสินค้าแค่ตัวเลขเท่านั้น");
       }
 
       setIsLoading(true);
 
       const formData = new FormData(); // ทำให้เป็น multipart from data เพื่อให้ axios ตรวจจับได้ง่ายๆ
-      formData.append("image", uploadImageEdit);
-      const uploadEditImage = await axios
+      formData.append("image", uploadImage);
+      const uploadAddCardProductImage = await axios
         .post("upload/product", formData)
         .then(async (res) => {
           // console.log(res);
           // console.log(res.data.cardProductImg);
-          const editCardProduct = await axios
-            .patch("card-products/edit/" + productIdForCardCode.productId, {
+          const addCardProduct = await axios
+            .post("card-products", {
               img: res.data.cardProductImg,
-              name: inputEditCardCode.editName,
-              price: inputEditCardCode.editPrice,
+              name: input.addName,
+              price: input.addPrice,
             })
-            .then((editCardProduct) => {
+            .then((addCardProduct) => {
               // console.log(editCardProduct);
-              if (editCardProduct) {
-                setErrorEditCardCode({});
+              if (addCardProduct) {
+                setErrorModal({});
               }
               setIsLoading(false);
-              window.alert("แก้ไขสินค้าสำเร็จ");
+              window.alert("เพิ่มสินค้าสำเร็จ");
               location.reload();
             });
         });
@@ -363,12 +292,12 @@ function ProductList() {
       // console.dir(err.response.data.message);
       setIsLoading(false);
       if (err.response) {
-        setErrorEditCardCode((prev) => ({
+        setErrorModal((prev) => ({
           ...prev,
           err: err.response.data.message,
         }));
       } else {
-        setErrorEditCardCode((prev) => ({
+        setErrorModal((prev) => ({
           ...prev,
           err: err.message,
         }));
@@ -410,15 +339,15 @@ function ProductList() {
                 return (
                   <ProductListItem
                     key={item.id}
-                    id={item.id}
                     index={index}
+                    item={item}
+                    id={item.id}
                     img={item.img}
                     name={item.name}
                     price={item.price}
                     cardCodeLists={cardCodeLists}
                     openAddCardCodeModal={openAddCardCodeModal}
-                    openEditCardCodeModal={openEditCardCodeModal}
-                    item={item}
+                    openEditCardProductModal={openEditCardProductModal}
                     handlerDeleteProduct={handlerDeleteProduct}
                   />
                 );
@@ -446,128 +375,34 @@ function ProductList() {
       <ModalAddCardCode
         modalAddCardCodeOpen={modalAddCardCodeOpen}
         closeAddCardCodeModal={closeAddCardCodeModal}
-        productIdForCardCode={productIdForCardCode}
-        setProductIdForCardCode={setProductIdForCardCode}
-        errorAddCardCode={errorAddCardCode}
+        cardProductDetail={cardProductDetail}
+        errorModal={errorModal}
         handlerSubmitAddCardCode={handlerSubmitAddCardCode}
         handlerInputChange={handlerInputChange}
       />
 
       <ModalEditCardCode
-        modalEditCardCodeOpen={modalEditCardCodeOpen}
-        closeEditCardCodeModal={closeEditCardCodeModal}
-        productIdForCardCode={productIdForCardCode}
-        uploadImageEdit={uploadImageEdit}
-        errorEditCardCode={errorEditCardCode}
-        handlerUploadImageEdit={handlerUploadImageEdit}
-        handlerEditInputChange={handlerEditInputChange}
-        handlerSubmitEditCardCode={handlerSubmitEditCardCode}
+        modalEditCardProductOpen={modalEditCardProductOpen}
+        closeEditCardProductModal={closeEditCardProductModal}
+        cardProductDetail={cardProductDetail}
+        uploadImage={uploadImage}
+        errorModal={errorModal}
+        handlerUploadImage={handlerUploadImage}
+        handlerInputChange={handlerInputChange}
+        handlerSubmitEditCardProduct={handlerSubmitEditCardProduct}
         isLoading={isLoading}
       />
 
-      <Modal
-        isOpen={modalAddCardProductOpen}
-        // onAfterOpen={afterOpenModal}
-        onRequestClose={closeAddCardProductModal}
-        style={customModalStyles}
-        contentLabel="AddCardProduct Modal"
-        ariaHideApp={false}
-      >
-        <div className="modal-box">
-          <div className="modal-box-header">
-            <div>
-              <h2>เพิ่มสินค้า</h2>
-            </div>
-            <CloseSquareOutlined
-              onClick={closeAddCardProductModal}
-              className="modal-box-header-close-btn"
-            />
-          </div>
-          <hr className="loginPage-form-div-hr" />
-
-          <form className="modal-box-form">
-            <table className="modal-box-form-payment-table-input">
-              <tbody>
-                <tr>
-                  <td className="modal-box-form-payment-table-text">
-                    <div className="modal-box-form-payment-table-imgPre-box">
-                      {/* {props.uploadImageEdit === null ? (
-                        <div className="modal-box-form-payment-table-imgPre-box-text">
-                          ภาพตัวอย่างจะแสดงตรงนี้
-                        </div>
-                      ) : ( */}
-                      <div className="modal-box-form-payment-table-imgPre-box-text-zIndex">
-                        ภาพตัวอย่างจะแสดงตรงนี้
-                      </div>
-                      {/* )} */}
-                      <img
-                        // src={
-                        //   props.uploadImageEdit === null
-                        //     ? ""
-                        //     : URL.createObjectURL(props.uploadImageEdit)
-                        // }
-                        className="modal-box-form-payment-table-imgPre-box-img"
-                      />
-                    </div>
-                  </td>
-                  <td>
-                    <label htmlFor="edit-image">รูปภาพสินค้า</label>
-                    <input
-                      type="file"
-                      id="edit-image"
-                      className="modal-box-form-payment-table-input-img"
-                      name="editImage"
-                      // onChange={props.handlerUploadImageEdit}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td className="modal-box-form-payment-table-text">
-                    <label htmlFor="edit-name">ชื่อสินค้า</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      id="edit-name"
-                      className="modal-box-form-payment-table-input"
-                      name="editName"
-                      // onChange={props.handlerEditInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td className="modal-box-form-payment-table-text">
-                    <label htmlFor="edit-price">ราคา</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      id="edit-price"
-                      className="modal-box-form-payment-table-input"
-                      name="editPrice"
-                      // onChange={props.handlerEditInputChange}
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-            {/* {props.errorEditCardCode.err && (
-            <span className="modal-box-error-box">
-              <h4>{props.errorEditCardCode.err}</h4>
-            </span>
-          )} */}
-            {/* {props.isLoading && <Loading />} */}
-            <button
-              type="submit"
-              className="modal-box-form-submit-btn"
-              // onClick={props.handlerSubmitEditCardCode}
-            >
-              ยืนยันการเพิ่มสินค้า
-            </button>
-          </form>
-        </div>
-      </Modal>
+      <ModalAddCardProduct
+        modalAddCardProductOpen={modalAddCardProductOpen}
+        closeAddCardProductModal={closeAddCardProductModal}
+        uploadImage={uploadImage}
+        errorModal={errorModal}
+        handlerUploadImage={handlerUploadImage}
+        handlerInputChange={handlerInputChange}
+        handlerSubmitAddCardProduct={handlerSubmitAddCardProduct}
+        isLoading={isLoading}
+      />
     </>
   );
 }

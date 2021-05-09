@@ -12,6 +12,7 @@ const customModalStyles = {
 
 import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
+import Loading from "../item/Loading";
 
 function ModalUploadPayment(props) {
   return (
@@ -163,6 +164,7 @@ function ModalUploadPayment(props) {
               <h4>{props.errorPayment.err}</h4>
             </span>
           )}
+          {props.isLoading && <Loading />}
           <button
             type="submit"
             className="modal-box-form-submit-btn"

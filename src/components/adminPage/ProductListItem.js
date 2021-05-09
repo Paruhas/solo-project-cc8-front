@@ -33,13 +33,13 @@ function ProductListItem(props) {
         <div className="content-center-profile-admin-firstBox-table-btn-group">
           <button
             className="content-center-profile-admin-firstBox-table-btn-add"
-            onClick={(e) => props.openAddCardCodeModal(e, props.id, props.name)}
+            onClick={(e) => props.openAddCardCodeModal(e, props.item)}
           >
             <PlusOutlined /> Add CardCode
           </button>
           <button
             className="content-center-profile-admin-firstBox-table-btn-edit"
-            onClick={(e) => props.openEditCardCodeModal(e, props.item)}
+            onClick={(e) => props.openEditCardProductModal(e, props.item)}
           >
             <ToolFilled /> Edit
           </button>

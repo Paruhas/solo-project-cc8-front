@@ -15,9 +15,9 @@ import Loading from "../item/Loading";
 function ModalEditCardCode(props) {
   return (
     <Modal
-      isOpen={props.modalEditCardCodeOpen}
+      isOpen={props.modalEditCardProductOpen}
       // onAfterOpen={afterOpenModal}
-      onRequestClose={props.closeEditCardCodeModal}
+      onRequestClose={props.closeEditCardProductModal}
       style={customModalStyles}
       contentLabel="EditCardProduct Modal"
       ariaHideApp={false}
@@ -28,7 +28,7 @@ function ModalEditCardCode(props) {
             <h2>แก้ไขสินค้า</h2>
           </div>
           <CloseSquareOutlined
-            onClick={props.closeEditCardCodeModal}
+            onClick={props.closeEditCardProductModal}
             className="modal-box-header-close-btn"
           />
         </div>
@@ -50,12 +50,12 @@ function ModalEditCardCode(props) {
             <tr>
               <td>
                 <img
-                  src={props.productIdForCardCode?.productImg}
+                  src={props.cardProductDetail?.productImg}
                   className="modal-box-form-editCardProduct-table-img"
                 />
               </td>
-              <td>{props.productIdForCardCode?.productName}</td>
-              <td>{props.productIdForCardCode?.productPrice} บาท</td>
+              <td>{props.cardProductDetail?.productName}</td>
+              <td>{props.cardProductDetail?.productPrice} บาท</td>
             </tr>
           </tbody>
         </table>
@@ -66,7 +66,7 @@ function ModalEditCardCode(props) {
               <tr>
                 <td className="modal-box-form-payment-table-text">
                   <div className="modal-box-form-payment-table-imgPre-box">
-                    {props.uploadImageEdit === null ? (
+                    {props.uploadImage === null ? (
                       <div className="modal-box-form-payment-table-imgPre-box-text">
                         ภาพตัวอย่างจะแสดงตรงนี้
                       </div>
@@ -77,9 +77,9 @@ function ModalEditCardCode(props) {
                     )}
                     <img
                       src={
-                        props.uploadImageEdit === null
+                        props.uploadImage === null
                           ? ""
-                          : URL.createObjectURL(props.uploadImageEdit)
+                          : URL.createObjectURL(props.uploadImage)
                       }
                       className="modal-box-form-payment-table-imgPre-box-img"
                     />
@@ -92,7 +92,7 @@ function ModalEditCardCode(props) {
                     id="edit-image"
                     className="modal-box-form-payment-table-input-img"
                     name="editImage"
-                    onChange={props.handlerUploadImageEdit}
+                    onChange={props.handlerUploadImage}
                   />
                 </td>
               </tr>
@@ -106,7 +106,7 @@ function ModalEditCardCode(props) {
                     id="edit-name"
                     className="modal-box-form-payment-table-input"
                     name="editName"
-                    onChange={props.handlerEditInputChange}
+                    onChange={props.handlerInputChange}
                   />
                 </td>
               </tr>
@@ -120,23 +120,23 @@ function ModalEditCardCode(props) {
                     id="edit-price"
                     className="modal-box-form-payment-table-input"
                     name="editPrice"
-                    onChange={props.handlerEditInputChange}
+                    onChange={props.handlerInputChange}
                   />
                 </td>
               </tr>
             </tbody>
           </table>
 
-          {props.errorEditCardCode.err && (
+          {props.errorModal.err && (
             <span className="modal-box-error-box">
-              <h4>{props.errorEditCardCode.err}</h4>
+              <h4>{props.errorModal.err}</h4>
             </span>
           )}
           {props.isLoading && <Loading />}
           <button
             type="submit"
             className="modal-box-form-submit-btn"
-            onClick={props.handlerSubmitEditCardCode}
+            onClick={props.handlerSubmitEditCardProduct}
           >
             ยืนยันการแก้ไขสินค้า
           </button>

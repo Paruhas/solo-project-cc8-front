@@ -451,7 +451,8 @@ input::-webkit-inner-spin-button {
 }
 
 .content-center-admin-firstBox,
-.content-center-admin-secondBox {
+.content-center-admin-secondBox,
+.content-center-admin-thirdBox {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -461,7 +462,8 @@ input::-webkit-inner-spin-button {
 }
 
 .content-center-profile-admin-firstBox-inside,
-.content-center-profile-admin-secondBox-inside {
+.content-center-profile-admin-secondBox-inside,
+.content-center-profile-admin-thirdBox-inside {
   width: 1250px;
   min-width: 560px;
   padding: 20px;
@@ -472,7 +474,8 @@ input::-webkit-inner-spin-button {
 }
 
 .content-center-profile-admin-firstBox-table,
-.content-center-profile-admin-secondBox-table {
+.content-center-profile-admin-secondBox-table,
+.content-center-profile-admin-thirdBox-table {
   width: 100%;
   margin: 10px 0px;
   border-spacing: 0px 20px;
@@ -676,6 +679,106 @@ input::-webkit-inner-spin-button {
   outline: none;
   border: none;
   border-radius: 15px;
+  margin: 1%;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+/* AdminPage - ApprovePayment */
+.content-center-profile-admin-thirdBox-table-row1 {
+  width: 6%;
+  border: 1px solid black;
+  border-right: none;
+  border-radius: 15px 0px 0px 15px;
+  padding: 10px 0px;
+}
+
+.content-center-profile-admin-thirdBox-table-row2 {
+  width: 20%;
+  border: 1px solid black;
+  border-left: none;
+  border-right: none;
+  padding: 10px 0px;
+}
+
+.content-center-profile-admin-thirdBox-table-row3 {
+  width: 10%;
+  border: 1px solid black;
+  border-left: none;
+  border-right: none;
+  padding: 10px 0px;
+}
+
+.content-center-profile-admin-thirdBox-table-row4 {
+  width: 11%;
+  border: 1px solid black;
+  border-left: none;
+  border-right: none;
+  padding: 10px 0px;
+}
+
+.content-center-profile-admin-thirdBox-table-row5 {
+  width: 12%;
+  border: 1px solid black;
+  border-left: none;
+  border-right: none;
+  padding: 10px 0px;
+}
+
+.content-center-profile-admin-thirdBox-table-row6 {
+  width: 20%;
+  border: 1px solid black;
+  border-left: none;
+  border-right: none;
+  padding: 10px 0px;
+}
+
+.content-center-profile-admin-thirdBox-table-row7 {
+  width: 11%;
+  border: 1px solid black;
+  border-left: none;
+  border-right: none;
+  padding: 10px 0px;
+}
+
+.content-center-profile-admin-thirdBox-table-row8 {
+  width: 10%;
+  border: 1px solid black;
+  border-left: none;
+  border-radius: 0px 15px 15px 0px;
+  padding: 10px 0px;
+}
+
+.content-center-profile-admin-thirdBox-table-btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  width: 80%;
+  margin-left: 10%;
+  justify-content: center;
+}
+.content-center-profile-admin-thirdBox-table-btn-accept {
+  background-color: green;
+  width: max-content;
+  padding: 5%;
+  outline: none;
+  border: none;
+  border-radius: 50%;
+  margin: 1%;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.content-center-profile-admin-thirdBox-table-btn-cancel {
+  background-color: red;
+  width: max-content;
+  padding: 5%;
+  outline: none;
+  border: none;
+  border-radius: 50%;
   margin: 1%;
   color: white;
   font-weight: bold;
@@ -935,12 +1038,23 @@ input::-webkit-inner-spin-button {
 }
 
 /* ปุ่มหน้า ADMIN > ตาราง แก้ไขสินค้า */
+@media only screen and (max-width: 1100px) {
+  .content-center-profile-admin-thirdBox-table-tr > *,
+  .content-center-profile-admin-thirdBox-table-btn-group > * {
+    font-size: 14px;
+  }
+}
+
 @media only screen and (max-width: 970px) {
   .content-center-profile-admin-firstBox-table-btn-add,
   .content-center-profile-admin-firstBox-table-btn-edit,
   .content-center-profile-admin-firstBox-table-btn-delete,
   .content-center-profile-admin-secondBox-table-btn-delete {
     font-size: 14px;
+  }
+  .content-center-profile-admin-thirdBox-table-tr > *,
+  .content-center-profile-admin-thirdBox-table-btn-group > * {
+    font-size: 10px;
   }
 }
 @media only screen and (max-width: 780px) {

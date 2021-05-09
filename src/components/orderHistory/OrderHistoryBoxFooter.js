@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "../../configs/axios";
 
-import ModalUploadPayment from "./ModalUploadPayment";
+import ModalUploadPayment from "../Modal/ModalUploadPayment";
 
 function OrderHistoryBoxFooter(props) {
   const [paymentImagePre, setPaymentImagePre] = useState({
@@ -14,6 +14,8 @@ function OrderHistoryBoxFooter(props) {
   const [paymentTime, setPaymentTime] = useState("");
   const [paymentBank, setPaymentBank] = useState("");
   const [paymentNumber, setPaymentNumber] = useState("");
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [errorPayment, setErrorPayment] = useState({});
 
@@ -221,6 +223,7 @@ function OrderHistoryBoxFooter(props) {
         handlerPaymentNumberChange={handlerPaymentNumberChange}
         errorPayment={errorPayment}
         handlerSubmit={handlerSubmit}
+        isLoading={isLoading}
       />
     </>
   );
