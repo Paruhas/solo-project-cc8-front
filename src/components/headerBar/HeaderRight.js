@@ -21,6 +21,7 @@ function HeaderRight(props) {
     // removeToken("role");
     setIsAuthenticated(false);
     // setIsAdmin(false);
+    location.reload();
   };
 
   return (

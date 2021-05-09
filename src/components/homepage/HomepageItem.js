@@ -65,6 +65,11 @@ function HomepageItem(props) {
         return history.push("/admin");
       }
 
+      const areYouSure = window.confirm("ต้องการซื้อสินค้าใช่หรือไม่?");
+      if (!areYouSure) {
+        return;
+      }
+
       const resBuyNow = await axios.post("orders", {
         orderItems: [{ cardProductId: id, amount: itemNumber }],
       });
@@ -77,7 +82,7 @@ function HomepageItem(props) {
     }
   };
 
-  console.log(props);
+  // console.log(props);
   return (
     <div className="content-center-home-item-wrap">
       <div className="content-center-home-item">
