@@ -12,29 +12,34 @@ import { useHistory } from "react-router";
 
 function Homepage() {
   const [availableItem, setAvailableItem] = useState();
+  const [loginUserId, setLoginUserId] = useState();
 
   const history = useHistory();
 
   useEffect(async () => {
-    await roleIsAdmin();
+    await setUser();
     await fetchAvailableItem();
   }, []);
 
-  async function roleIsAdmin() {
+  async function setUser() {
     try {
       if (!getToken()) {
         return;
       }
+
       // const decodedUserData = await jwt_decode(getToken());
       // // console.log(decodedUserData.roleAdmin);
       // if (decodedUserData.roleAdmin === "ADMIN") {
       //   history.push("/admin");
       // }
+
       const userRes = await axios.get("user");
       // console.log(userRes.data.user.roleAdmin);
       if (userRes.data.user.roleAdmin === "ADMIN") {
         history.push("/admin");
       }
+      // console.log(userRes);
+      setLoginUserId(userRes.data.user.id);
     } catch (err) {
       console.log(err);
     }
@@ -60,12 +65,15 @@ function Homepage() {
 
         <div className="content-center">
           {availableItem?.map((item, index) => {
+            // console.log(item);
             return (
               <HomepageItem
                 key={item.id}
+                id={item.id}
                 img={item.img}
                 price={item.price}
                 CardCodes={item.CardCodes}
+                loginUserId={loginUserId}
               />
             );
           })}

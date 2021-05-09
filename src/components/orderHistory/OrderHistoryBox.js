@@ -31,7 +31,7 @@ function OrderHistoryBox() {
       // console.log(userRes.data.user.id);
 
       const resOrderHistory = await axios.get(
-        "/orders/user/" + userRes.data.user.id
+        "orders/user/" + userRes.data.user.id
       );
 
       if (!resOrderHistory) {

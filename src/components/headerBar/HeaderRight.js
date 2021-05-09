@@ -26,7 +26,7 @@ function HeaderRight(props) {
   return (
     <div>
       <ul className="navbar-right">
-        {!props.isAdmin && isAuthenticated && (
+        {/* {!props.isAdmin && isAuthenticated && (
           <li>
             <div className="navbar-right-shopping-cartAndNumber">
               <ShoppingCartOutlined className="navbar-right-shopping-cart" />
@@ -35,7 +35,7 @@ function HeaderRight(props) {
               </span>
             </div>
           </li>
-        )}
+        )} */}
         {!props.isAdmin && isAuthenticated && (
           <li>
             <Link to="/profile" className="navbar-right-user-link-tag">

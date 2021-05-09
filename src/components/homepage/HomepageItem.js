@@ -1,16 +1,21 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContextProvider";
 
-const isNumbers = /^\d*$/;
+import axios from "../../configs/axios";
+import { useHistory } from "react-router";
+
+// const isNumbers = /^\d*$/;
 
 function HomepageItem(props) {
   const { cartItem, setCartItem } = useContext(AuthContext);
   const [itemNumber, setItemNumber] = useState(1);
 
-  const handlerAddToCart = (e) => {
-    e.preventDefault();
-    setCartItem(cartItem + +itemNumber);
-  };
+  const history = useHistory();
+
+  // const handlerAddToCart = (e) => {
+  //   e.preventDefault();
+  //   setCartItem(cartItem + +itemNumber);
+  // };
 
   const handlerItemNumberSubtract = () => {
     itemNumber === 1 ? setItemNumber(1) : setItemNumber(itemNumber - 1);
@@ -42,6 +47,37 @@ function HomepageItem(props) {
       : setItemNumber(itemNumber + 1);
   };
 
+  const handlerBuyNow = async (e, id, itemNumber) => {
+    e.preventDefault();
+    try {
+      // console.log(id, "CardProductId");
+      // console.log(itemNumber, "itemNumber");
+      // console.log(props.loginUserId);
+
+      if (!props.loginUserId) {
+        window.alert("กรุณา Login หรือ Register ก่อนซื้อสินค้า");
+        return history.push("/login-regis");
+      }
+
+      const checkRole = await axios.get("user");
+      if (checkRole.data.user.roleAdmin === "ADMIN") {
+        window.alert("User นี้ไม่สามารถซื้อสินค้าได้");
+        return history.push("/admin");
+      }
+
+      const resBuyNow = await axios.post("orders", {
+        orderItems: [{ cardProductId: id, amount: itemNumber }],
+      });
+      // console.log(resBuyNow);
+
+      window.alert("สั่งซื้อสินค้าสำเร็จ กรุณายืนยันการชำระเงิน");
+      history.push("/profile");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  console.log(props);
   return (
     <div className="content-center-home-item-wrap">
       <div className="content-center-home-item">
@@ -78,8 +114,14 @@ function HomepageItem(props) {
           </button>
         </div>
         <div className="button-group-addToCart">
-          <button className="button-addToCart" onClick={handlerAddToCart}>
+          {/* <button className="button-addToCart" onClick={handlerAddToCart}>
             Add to Cart
+          </button> */}
+          <button
+            className="button-addToCart"
+            onClick={(e) => handlerBuyNow(e, props.id, itemNumber)}
+          >
+            Buy Now
           </button>
         </div>
       </div>
