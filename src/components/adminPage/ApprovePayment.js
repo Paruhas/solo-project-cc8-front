@@ -1,22 +1,9 @@
 import React, { useEffect, useState } from "react";
-import {
-  CheckOutlined,
-  CloseOutlined,
-  CloseSquareOutlined,
-} from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import axios from "../../configs/axios";
 
-import Modal from "react-modal";
-
-const customModalStyles = {
-  content: {
-    width: "max-content",
-    margin: "auto",
-    height: "80%",
-  },
-};
-
 import moment from "moment";
+import ModalOpenSlip from "../Modal/ModalOpenSlip";
 
 function ApprovePayment() {
   const [paymentDetail, setPaymentDetail] = useState();
@@ -320,30 +307,11 @@ function ApprovePayment() {
           </tbody>
         </table>
 
-        <Modal
-          isOpen={modalSlipOpen}
-          // onAfterOpen={afterOpenModal}
-          onRequestClose={closeModalSlip}
-          style={customModalStyles}
-          contentLabel="Slip Modal"
-          ariaHideApp={false}
-        >
-          <div className="modal-box-header">
-            <div>
-              <h2>Slip OrderId: {slipImage?.Order?.id}</h2>
-            </div>
-            <CloseSquareOutlined
-              onClick={closeModalSlip}
-              className="modal-box-header-close-btn"
-            />
-          </div>
-
-          <img
-            src={slipImage?.img}
-            alt={"img error"}
-            className="modal-box-approvePayment-table-img"
-          />
-        </Modal>
+        <ModalOpenSlip
+          modalSlipOpen={modalSlipOpen}
+          closeModalSlip={closeModalSlip}
+          slipImage={slipImage}
+        />
       </div>
     </div>
   );

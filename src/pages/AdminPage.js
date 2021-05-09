@@ -46,7 +46,7 @@ function AdminPage() {
 
           <div className="content-center-admin">
             <ProductList />
-            {/* <BankAccList /> */}
+            <BankAccList />
             <ApprovePayment />
           </div>
 
