@@ -25,6 +25,13 @@ function ApprovePayment() {
   // console.log(paymentDetail);
 
   // get SORT Option
+  const [classForSortBtn, setClassForSortBtn] = useState({
+    all:
+      "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button-active",
+    pending: "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button",
+    approve: "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button",
+    cancel: "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button",
+  });
   const handlerSortPayment = async (e, sortOption) => {
     // console.log(sortOption);
     // console.log(e.target.style);
@@ -73,15 +80,8 @@ function ApprovePayment() {
           "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button-active",
       });
     }
+    setError({});
   };
-
-  const [classForSortBtn, setClassForSortBtn] = useState({
-    all:
-      "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button-active",
-    pending: "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button",
-    approve: "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button",
-    cancel: "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button",
-  });
 
   // Fn Approve Payment
   const [error, setError] = useState({});

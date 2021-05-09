@@ -106,6 +106,7 @@ function ProductList() {
         }
       );
       // console.log(addCardCodeRes);
+      setErrorModal({});
       window.alert(addCardCodeRes.data.message);
       closeAddCardCodeModal();
       location.reload();
@@ -263,6 +264,7 @@ function ProductList() {
       }
 
       setIsLoading(true);
+      setErrorModal({});
 
       const formData = new FormData(); // ทำให้เป็น multipart from data เพื่อให้ axios ตรวจจับได้ง่ายๆ
       formData.append("image", uploadImage);

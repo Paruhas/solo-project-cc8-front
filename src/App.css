@@ -953,6 +953,31 @@ input::-webkit-inner-spin-button {
   height: 90%;
 }
 
+/* Modal ViewCardCode */
+.modal-box-viewCardCode-table {
+  width: 500px;
+}
+
+.modal-box-viewCardCode-table-th-row1 {
+  width: 10%;
+  text-align: center;
+  font-size: 1.25rem;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.modal-box-viewCardCode-table-th-row2 {
+  width: 40%;
+  text-align: center;
+  font-size: 1.25rem;
+}
+
+.modal-box-viewCardCode-table-th-row3 {
+  width: 50%;
+  text-align: center;
+  font-size: 1.25rem;
+}
+
 /* Modal Error Box */
 .modal-box-error-box {
   color: red;

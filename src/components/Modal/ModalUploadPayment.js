@@ -15,6 +15,7 @@ import "react-dropdown/style.css";
 import Loading from "../item/Loading";
 
 function ModalUploadPayment(props) {
+  // console.log(props);
   return (
     <Modal
       isOpen={props.modalOpen}

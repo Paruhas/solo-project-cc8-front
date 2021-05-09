@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import axios from "../configs/axios";
 
 import Header from "../components/headerBar/Header";
 import EditProfile from "../components/profilePage/EditProfile";
@@ -18,9 +19,14 @@ function ProfilePage() {
 
   async function roleIsAdmin() {
     try {
-      const decodedUserData = await jwt_decode(getToken());
-      // console.log(decodedUserData.roleAdmin);
-      if (decodedUserData.roleAdmin === "ADMIN") {
+      // const decodedUserData = await jwt_decode(getToken());
+      // // console.log(decodedUserData.roleAdmin);
+      // if (decodedUserData.roleAdmin === "ADMIN") {
+      //   history.push("/admin");
+      // }
+      const userRes = await axios.get("user");
+      // console.log(userRes.data.user.roleAdmin);
+      if (userRes.data.user.roleAdmin === "ADMIN") {
         history.push("/admin");
       }
     } catch (err) {

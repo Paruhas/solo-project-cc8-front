@@ -1,20 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
 import Header from "../components/headerBar/Header";
 
-import { AuthContext } from "../contexts/AuthContextProvider";
+// import { AuthContext } from "../contexts/AuthContextProvider";
 import axios from "../configs/axios";
 
 import ProductList from "../components/adminPage/ProductList";
 import BankAccList from "../components/adminPage/BankAccList";
 import ApprovePayment from "../components/adminPage/ApprovePayment";
 
-import { getToken } from "../services/localStorageService";
-import jwt_decode from "jwt-decode";
+// import { getToken } from "../services/localStorageService";
+// import jwt_decode from "jwt-decode";
 import { useHistory } from "react-router";
-import Modal from "react-modal";
 
 function AdminPage() {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [loadingRes, setLoadingRes] = useState(false);
 
   const history = useHistory();
 
@@ -24,10 +24,18 @@ function AdminPage() {
 
   async function roleIsAdmin() {
     try {
-      const decodedUserData = await jwt_decode(getToken());
-      // console.log(decodedUserData.roleAdmin)
-      if (decodedUserData.roleAdmin === "ADMIN") {
+      // const decodedUserData = await jwt_decode(getToken());
+      // // console.log(decodedUserData.roleAdmin)
+      // if (decodedUserData.roleAdmin === "ADMIN") {
+      //   setIsAdmin(true);
+      // } else {
+      //   history.push("/");
+      // }
+      const userRes = await axios.get("user");
+      // console.log(userRes.data.user.roleAdmin);
+      if (userRes.data.user.roleAdmin === "ADMIN") {
         setIsAdmin(true);
+        setLoadingRes(true);
       } else {
         history.push("/");
       }
@@ -38,21 +46,19 @@ function AdminPage() {
 
   return (
     <div className="root">
-      <Header isAdmin={isAdmin} setIsAdmin={setIsAdmin} />
+      {loadingRes && <Header isAdmin={isAdmin} setIsAdmin={setIsAdmin} />}
 
-      {isAdmin && (
-        <div className="content-outside">
-          <div className="content-left"></div>
-
+      <div className="content-outside">
+        <div className="content-left"></div>
+        {isAdmin && (
           <div className="content-center-admin">
             <ProductList />
             <BankAccList />
             <ApprovePayment />
           </div>
-
-          <div className="content-right"></div>
-        </div>
-      )}
+        )}
+        <div className="content-right"></div>
+      </div>
 
       <div className="footer"></div>
     </div>

@@ -10,20 +10,34 @@ import moment from "moment";
 
 function OrderHistoryBox() {
   const [orderHistory, setOrderHistory] = useState();
+  const [orderHistoryCount, setOrderHistoryCount] = useState();
 
   useEffect(async () => {
-    await decodeToken();
+    await getOrderHistory();
   }, []);
 
-  async function decodeToken() {
+  async function getOrderHistory() {
     try {
-      const decodedUserData = await jwt_decode(getToken());
-      if (decodedUserData.roleAdmin === "ADMIN") {
+      // const decodedUserData = await jwt_decode(getToken());
+      // if (decodedUserData.roleAdmin === "ADMIN") {
+      //   return;
+      // }
+
+      const userRes = await axios.get("user");
+      // console.log(userRes.data.user.roleAdmin);
+      if (userRes.data.user.roleAdmin === "ADMIN") {
         return;
       }
+      // console.log(userRes.data.user.id);
+
       const resOrderHistory = await axios.get(
-        "/orders/user/" + decodedUserData.id
+        "/orders/user/" + userRes.data.user.id
       );
+
+      if (!resOrderHistory) {
+        return;
+      }
+      // console.log(resOrderHistory.data.allOrdersByUserId);
       setOrderHistory(resOrderHistory.data.allOrdersByUserId);
     } catch (err) {
       console.log(err);
@@ -33,12 +47,6 @@ function OrderHistoryBox() {
   return (
     <>
       {orderHistory?.map((item, index) => {
-        var dateString =
-          new Date(item.createdAt).getDate() +
-          "-" +
-          (new Date(item.createdAt).getMonth() + 1) +
-          "-" +
-          new Date(item.createdAt).getFullYear();
         return (
           <div
             className="content-center-profile-historyBox-orderDetail"

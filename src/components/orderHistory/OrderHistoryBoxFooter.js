@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "../../configs/axios";
 
 import ModalUploadPayment from "../Modal/ModalUploadPayment";
+import ModalViewCardCode from "../Modal/ModalViewCardCode";
 
 function OrderHistoryBoxFooter(props) {
   const [paymentImagePre, setPaymentImagePre] = useState({
@@ -87,6 +88,8 @@ function OrderHistoryBoxFooter(props) {
         throw Error("กรุณาใส่ เลขที่รายการ");
       }
 
+      setIsLoading(true);
+
       const findIdSelectedBank = adminBank.filter((item, index) => {
         return item.bankName === paymentBank ? item.id : null;
       });
@@ -112,6 +115,7 @@ function OrderHistoryBoxFooter(props) {
               if (uploadPayment) {
                 setErrorPayment({});
               }
+              setIsLoading(false);
               window.alert("อัพโหลดหลักฐานการโอนเงินสำเร็จ");
               location.reload();
             });
@@ -133,7 +137,7 @@ function OrderHistoryBoxFooter(props) {
     }
   };
 
-  // Modal
+  // Modal UploadPayment
   const [modalOpen, setModalOpen] = useState(false);
 
   async function openModal() {
@@ -178,6 +182,49 @@ function OrderHistoryBoxFooter(props) {
     options.push(item.bankName);
   }
 
+  // ViewCardCode
+  // Modal ViewCardCode
+  const [viewCardCodeModalOpen, setOpenViewCardCodeModalOpen] = useState(false);
+
+  function openViewCardCodeModal(e, item) {
+    // console.log(item);
+    // console.log(item.orderId);
+    if (item.paymentStatus !== "APPROVE") {
+      return;
+    }
+
+    setOpenViewCardCodeModalOpen(true);
+    getCardCode(e, item.orderId, item.paymentStatus);
+  }
+
+  function closeViewCardCodeModal(e, item) {
+    setOpenViewCardCodeModalOpen(false);
+  }
+
+  const [viewProduct, setViewProduct] = useState();
+
+  async function getCardCode(e, orderId, paymentStatus) {
+    try {
+      // console.log(orderId);
+      // console.log(paymentStatus);
+
+      if (paymentStatus !== "APPROVE") {
+        throw new Error("can't viewCardCode; paymentStatus !== APPROVE");
+      }
+
+      const resCardCodeByOrderId = await axios.get(
+        "/orders/approve/" + orderId
+      );
+
+      setViewProduct(
+        resCardCodeByOrderId.data.ordersByIdPaymentStatusAPPROVE[0]
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  // console.log(viewProduct);
+
   return (
     <>
       <div>
@@ -199,7 +246,10 @@ function OrderHistoryBoxFooter(props) {
       </div>
       <div>
         {props.paymentStatus === "APPROVE" ? (
-          <button className="content-center-profile-historyBox-orderDetail-footer-btn">
+          <button
+            className="content-center-profile-historyBox-orderDetail-footer-btn"
+            onClick={(e) => openViewCardCodeModal(e, props)}
+          >
             ดูรหัสสินค้า
           </button>
         ) : (
@@ -224,6 +274,14 @@ function OrderHistoryBoxFooter(props) {
         errorPayment={errorPayment}
         handlerSubmit={handlerSubmit}
         isLoading={isLoading}
+        orderId={props.orderId}
+      />
+
+      <ModalViewCardCode
+        viewCardCodeModalOpen={viewCardCodeModalOpen}
+        closeViewCardCodeModal={closeViewCardCodeModal}
+        viewProduct={viewProduct}
+        orderId={props.orderId}
       />
     </>
   );
