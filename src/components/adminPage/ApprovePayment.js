@@ -12,33 +12,220 @@ const customModalStyles = {
   content: {
     width: "max-content",
     margin: "auto",
-    height: "max-content",
+    height: "80%",
   },
 };
 
+import moment from "moment";
+
 function ApprovePayment() {
   const [paymentDetail, setPaymentDetail] = useState();
+  const [getPaymentOption, setGetPaymentOption] = useState("");
 
   useEffect(async () => {
     await getAllPayments();
-  }, []);
+  }, [getPaymentOption]);
 
   async function getAllPayments() {
     try {
-      const allPaymentsRes = await axios.get("payment/");
-      // console.log(allPaymentsRes.data.payments);
-      setPaymentDetail(allPaymentsRes.data.payments);
+      const paymentsRes = await axios.get("payment?sort=" + getPaymentOption);
+      // console.log(paymentsRes.data.payments);
+      setPaymentDetail(paymentsRes.data.payment);
     } catch (err) {
       console.log(err);
     }
   }
   // console.log(paymentDetail);
 
+  // get SORT Option
+  const handlerSortPayment = async (e, sortOption) => {
+    // console.log(sortOption);
+    // console.log(e.target.style);
+    // console.log(e.target.classList.value);
+    e.preventDefault();
+    setGetPaymentOption(sortOption);
+    if (sortOption === "") {
+      setClassForSortBtn({
+        all:
+          "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button-active",
+        pending:
+          "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button",
+        approve:
+          "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button",
+        cancel:
+          "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button",
+      });
+    } else if (sortOption === "0") {
+      setClassForSortBtn({
+        all: "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button",
+        pending:
+          "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button-active",
+        approve:
+          "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button",
+        cancel:
+          "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button",
+      });
+    } else if (sortOption === "1") {
+      setClassForSortBtn({
+        all: "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button",
+        pending:
+          "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button",
+        approve:
+          "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button-active",
+        cancel:
+          "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button",
+      });
+    } else if (sortOption === "2") {
+      setClassForSortBtn({
+        all: "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button",
+        pending:
+          "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button",
+        approve:
+          "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button",
+        cancel:
+          "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button-active",
+      });
+    }
+  };
+
+  const [classForSortBtn, setClassForSortBtn] = useState({
+    all:
+      "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button-active",
+    pending: "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button",
+    approve: "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button",
+    cancel: "content-center-profile-admin-thirdBox-sortGroup-btnGroup-button",
+  });
+
+  // Fn Approve Payment
+  const [error, setError] = useState({});
+
+  const handlerAcceptPayment = async (e, paymentId) => {
+    e.preventDefault();
+    // console.log(paymentId);
+    try {
+      const confirmAccept = window.confirm(
+        "ยอมรับการโอนเงิน และส่งรหัสสินค้าให้กับลูกค้า?"
+      );
+      if (!confirmAccept) {
+        return;
+      }
+      const acceptPaymentRes = await axios.patch("/payment/approve", {
+        paymentId: paymentId,
+      });
+      // console.log(acceptPaymentRes);
+      setError({});
+      getAllPayments();
+    } catch (err) {
+      console.log(err);
+      if (err.response) {
+        setError((prev) => ({
+          ...prev,
+          err: err.response.data.message,
+        }));
+      } else {
+        setError((prev) => ({
+          ...prev,
+          err: err.message,
+        }));
+      }
+    }
+  };
+
+  // Fn Cancel Payment
+  const handlerCancelPayment = async (e, paymentId) => {
+    e.preventDefault();
+    // console.log(paymentId);
+    try {
+      const confirmCancel = window.confirm(
+        "ปฏิเสธการโอนเงิน และยกเลิกการสั่งซื้อของลูกค้า?"
+      );
+      if (!confirmCancel) {
+        return;
+      }
+      const cancelPaymentRes = await axios.patch("/payment/cancel", {
+        paymentId: paymentId,
+      });
+      // console.log(cancelPaymentRes);
+      setError({});
+      getAllPayments();
+    } catch (err) {
+      console.log(err);
+      if (err.response) {
+        setError((prev) => ({
+          ...prev,
+          err: err.response.data.message,
+        }));
+      } else {
+        setError((prev) => ({
+          ...prev,
+          err: err.message,
+        }));
+      }
+    }
+  };
+
+  //Modal Slip
+  const [modalSlipOpen, setModalSlipOpen] = useState(false);
+  const [slipImage, setSlipImage] = useState("");
+
+  function openModalSlip(e, item) {
+    // console.log(item);
+    // console.log(e.target.src);
+    setModalSlipOpen(true);
+    setSlipImage(item);
+  }
+  // console.log(slipImage);
+  // console.log(slipImage.img);
+
+  function closeModalSlip(e) {
+    setError({});
+    setSlipImage("");
+    setModalSlipOpen(false);
+  }
+
   return (
     <div className="content-center-admin-thirdBox">
       <div className="content-center-profile-admin-thirdBox-inside">
         <h2>ตรวจสอบการโอนเงิน</h2>
         <hr className="loginPage-form-div-hr" />
+
+        {error.err && (
+          <div className="modal-box-error-box">
+            <h4>{error.err}</h4>
+          </div>
+        )}
+
+        <div className="content-center-profile-admin-thirdBox-sortGroup">
+          <div className="content-center-profile-admin-thirdBox-sortGroup-text">
+            <h4>SORT OPTION</h4>
+          </div>
+          <div className="content-center-profile-admin-thirdBox-sortGroup-btnGroup">
+            <button
+              className={classForSortBtn.all}
+              onClick={(e) => handlerSortPayment(e, "")}
+            >
+              ALL
+            </button>
+            <button
+              className={classForSortBtn.pending}
+              onClick={(e) => handlerSortPayment(e, "0")}
+            >
+              PENDING
+            </button>
+            <button
+              className={classForSortBtn.approve}
+              onClick={(e) => handlerSortPayment(e, "1")}
+            >
+              APPROVE
+            </button>
+            <button
+              className={classForSortBtn.cancel}
+              onClick={(e) => handlerSortPayment(e, "2")}
+            >
+              CANCEL
+            </button>
+          </div>
+        </div>
 
         <table className="content-center-profile-admin-thirdBox-table">
           <tbody>
@@ -70,13 +257,6 @@ function ApprovePayment() {
             </tr>
 
             {paymentDetail?.map((item, index) => {
-              // console.log(item);
-              // console.log(item.Order?.id);
-              // console.log(item.img);
-              // console.log(item.dateTime);
-              // console.log(item.BankAccount?.bankName);
-              // console.log(item.transactionNumber);
-              // console.log(item.Order?.paymentStatus);
               return (
                 <tr
                   className="content-center-profile-admin-thirdBox-table-tr"
@@ -90,16 +270,21 @@ function ApprovePayment() {
                   </td>
                   <td className="content-center-profile-admin-thirdBox-table-row3">
                     <div className="content-center-profile-admin-firstBox-table-row2-div">
-                      <img
-                        onClick={(e) => console.log("click" + item.id)}
-                        src={item.img}
-                        alt={"img error"}
-                        className="content-center-profile-admin-firstBox-table-row2-div-img"
-                      />
+                      {item.img && (
+                        <img
+                          onClick={(e) => openModalSlip(e, item)}
+                          src={item.img}
+                          alt={"img error"}
+                          className="content-center-profile-admin-firstBox-table-row2-div-img"
+                        />
+                      )}
                     </div>
                   </td>
                   <td className="content-center-profile-admin-thirdBox-table-row4">
-                    {item.dateTime}
+                    {item.dateTime &&
+                      moment(item.dateTime).format("DD/MM/YYYY")}{" "}
+                    &nbsp;
+                    {item.dateTime && moment(item.dateTime).format("HH:mm")}
                   </td>
                   <td className="content-center-profile-admin-thirdBox-table-row5">
                     {item.BankAccount?.bankName}
@@ -111,20 +296,23 @@ function ApprovePayment() {
                     {item.Order?.paymentStatus}
                   </td>
                   <td className="content-center-profile-admin-thirdBox-table-row8">
-                    <div className="content-center-profile-admin-thirdBox-table-btn-group">
-                      <button
-                        className="content-center-profile-admin-thirdBox-table-btn-accept"
-                        // onClick={"(e) => handlerDeleteBank(e, item.id)"}
-                      >
-                        <CheckOutlined />
-                      </button>
-                      <button
-                        className="content-center-profile-admin-thirdBox-table-btn-cancel"
-                        // onClick={"(e) => handlerDeleteBank(e, item.id)"}
-                      >
-                        <CloseOutlined />
-                      </button>
-                    </div>
+                    {item.Order?.paymentStatus === "PENDING" && (
+                      <div className="content-center-profile-admin-thirdBox-table-btn-group">
+                        <button
+                          className="content-center-profile-admin-thirdBox-table-btn-accept"
+                          // onClick={(e) => console.log(item?.id)}
+                          onClick={(e) => handlerAcceptPayment(e, item?.id)}
+                        >
+                          <CheckOutlined />
+                        </button>
+                        <button
+                          className="content-center-profile-admin-thirdBox-table-btn-cancel"
+                          onClick={(e) => handlerCancelPayment(e, item?.id)}
+                        >
+                          <CloseOutlined />
+                        </button>
+                      </div>
+                    )}
                   </td>
                 </tr>
               );
@@ -132,89 +320,30 @@ function ApprovePayment() {
           </tbody>
         </table>
 
-        {/* <Modal
-          isOpen={modalOpen}
+        <Modal
+          isOpen={modalSlipOpen}
           // onAfterOpen={afterOpenModal}
-          onRequestClose={closeModal}
+          onRequestClose={closeModalSlip}
           style={customModalStyles}
-          contentLabel="AddBankAcc Modal"
+          contentLabel="Slip Modal"
           ariaHideApp={false}
         >
-          <div className="modal-box">
-            <div className="modal-box-header">
-              <h2>เพิ่มบัญชีธนาคาร</h2>
-              <CloseSquareOutlined
-                onClick={closeModal}
-                className="modal-box-header-close-btn"
-              />
+          <div className="modal-box-header">
+            <div>
+              <h2>Slip OrderId: {slipImage?.Order?.id}</h2>
             </div>
-
-            <form className="modal-box-form">
-              <table className="modal-box-form-table-input">
-                <tbody>
-                  <tr>
-                    <td className="modal-box-form-table-text">
-                      <label htmlFor="bank-name">ชื่อธนาคาร</label>
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        id="bank-name"
-                        className="modal-box-form-table-input"
-                        name="bankName"
-                        value={input.bankName}
-                        onChange={handlerInputChange}
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="modal-box-form-table-text">
-                      <label htmlFor="acc-name">ชื่อบัญชี</label>
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        id="acc-name"
-                        className="modal-box-form-table-input"
-                        name="accountName"
-                        value={input.accountName}
-                        onChange={handlerInputChange}
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="modal-box-form-table-text">
-                      <label htmlFor="acc-number">เลขที่บัญชี</label>
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        id="acc-number"
-                        className="modal-box-form-table-input"
-                        name="accountNumber"
-                        value={input.accountNumber}
-                        onChange={handlerInputChange}
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-
-              {errorBankAcc.err && (
-                <span className="modal-box-error-box">
-                  <h4>{errorBankAcc.err}</h4>
-                </span>
-              )}
-              <button
-                type="submit"
-                className="modal-box-form-submit-btn"
-                onClick={handlerSubmit}
-              >
-                + เพิ่มบัญชีธนาคาร
-              </button>
-            </form>
+            <CloseSquareOutlined
+              onClick={closeModalSlip}
+              className="modal-box-header-close-btn"
+            />
           </div>
-        </Modal> */}
+
+          <img
+            src={slipImage?.img}
+            alt={"img error"}
+            className="modal-box-approvePayment-table-img"
+          />
+        </Modal>
       </div>
     </div>
   );

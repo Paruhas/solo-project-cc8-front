@@ -198,7 +198,7 @@ function OrderHistoryBoxFooter(props) {
         )}
       </div>
       <div>
-        {props.paymentStatus === "COMPLETE" ? (
+        {props.paymentStatus === "APPROVE" ? (
           <button className="content-center-profile-historyBox-orderDetail-footer-btn">
             ดูรหัสสินค้า
           </button>

@@ -6,6 +6,8 @@ import jwt_decode from "jwt-decode";
 
 import OrderHistoryBoxFooter from "./OrderHistoryBoxFooter";
 
+import moment from "moment";
+
 function OrderHistoryBox() {
   const [orderHistory, setOrderHistory] = useState();
 
@@ -47,7 +49,11 @@ function OrderHistoryBox() {
                 <h3>Order Id: {item.id}</h3>
               </div>
               <div>
-                <h3>Order Date: {dateString}</h3>
+                <h3>
+                  Order Date:{" "}
+                  {item.createdAt &&
+                    moment(item.createdAt).format("DD/MM/YYYY")}
+                </h3>
               </div>
             </div>
 
