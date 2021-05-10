@@ -34,21 +34,24 @@ function Login() {
         password: input.password,
       });
       setToken(loginRes.data.token);
-      // const decodedUserData = jwt_decode(getToken());
+      setIsAuthenticated(true);
+
+      // ท่า decode หา role
+      const decodedUserData = jwt_decode(getToken());
 
       // setRole(decodedUserData.roleAdmin);
 
-      setIsAuthenticated(true);
-      // if (decodedUserData.roleAdmin === "ADMIN") {
-      //   return history.push("/admin");
-      // }
-      // history.push("/");
-
-      const checkRole = await axios.get("user");
-      if (checkRole.data.user.roleAdmin === "ADMIN") {
+      if (decodedUserData.roleAdmin === "ADMIN") {
         return history.push("/admin");
       }
       history.push("/");
+
+      // // ท่าแบบ getUser หา role
+      // const checkRole = await axios.get("user");
+      // if (checkRole.data.user.roleAdmin === "ADMIN") {
+      //   return history.push("/admin");
+      // }
+      // history.push("/");
     } catch (err) {
       if (!input.email) {
         setError((prev) => ({ ...prev, err: "email is required" }));

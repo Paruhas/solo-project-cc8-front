@@ -10,7 +10,6 @@ import moment from "moment";
 
 function OrderHistoryBox() {
   const [orderHistory, setOrderHistory] = useState();
-  const [orderHistoryCount, setOrderHistoryCount] = useState();
 
   useEffect(async () => {
     await getOrderHistory();
@@ -18,27 +17,37 @@ function OrderHistoryBox() {
 
   async function getOrderHistory() {
     try {
-      // const decodedUserData = await jwt_decode(getToken());
-      // if (decodedUserData.roleAdmin === "ADMIN") {
-      //   return;
-      // }
-
-      const userRes = await axios.get("user");
-      // console.log(userRes.data.user.roleAdmin);
-      if (userRes.data.user.roleAdmin === "ADMIN") {
+      // ท่า decode หา role
+      const decodedUserData = await jwt_decode(getToken());
+      if (decodedUserData.roleAdmin === "ADMIN") {
         return;
       }
-      // console.log(userRes.data.user.id);
-
       const resOrderHistory = await axios.get(
-        "orders/user/" + userRes.data.user.id
+        "orders/user/" + decodedUserData.id
       );
-
       if (!resOrderHistory) {
         return;
       }
       // console.log(resOrderHistory.data.allOrdersByUserId);
       setOrderHistory(resOrderHistory.data.allOrdersByUserId);
+
+      // // ท่าแบบ getUser หา role
+      // const userRes = await axios.get("user");
+      // // console.log(userRes.data.user.roleAdmin);
+      // if (userRes.data.user.roleAdmin === "ADMIN") {
+      //   return;
+      // }
+      // // console.log(userRes.data.user.id);
+
+      // const resOrderHistory = await axios.get(
+      //   "orders/user/" + userRes.data.user.id
+      // );
+
+      // if (!resOrderHistory) {
+      //   return;
+      // }
+      // // console.log(resOrderHistory.data.allOrdersByUserId);
+      // setOrderHistory(resOrderHistory.data.allOrdersByUserId);
     } catch (err) {
       console.log(err);
     }

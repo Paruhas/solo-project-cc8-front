@@ -1,9 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import {
+  CheckOutlined,
+  CloseOutlined,
+  CloseSquareOutlined,
+} from "@ant-design/icons";
 import axios from "../../configs/axios";
 
 import moment from "moment";
 import ModalOpenSlip from "../Modal/ModalOpenSlip";
+
+// Modal Order
+import Modal from "react-modal";
+const customModalStyles = {
+  content: {
+    width: "max-content",
+    margin: "auto",
+    height: "max-content",
+  },
+};
 
 function ApprovePayment() {
   const [paymentDetail, setPaymentDetail] = useState();
@@ -170,6 +184,60 @@ function ApprovePayment() {
     setModalSlipOpen(false);
   }
 
+  //Modal Order
+  const [orderModalOpen, setOrderModalOpen] = useState(false);
+  const [orderHis, setOrderHis] = useState();
+  const [orderDetail, setOrderDetail] = useState([]);
+
+  async function openModalOrder(e, item) {
+    // console.log(e);
+    // console.log(item);
+    // console.log(item.Order.id, "orderId");
+    // console.log(item.Order.userId, "user_id");
+    try {
+      const orderRes = await axios.get(
+        "orders/order-user/" + item.Order.userId + "?orderId=" + item.Order.id
+      );
+      if (!orderRes) {
+        throw new Error("order not found");
+      }
+      const userRes = await axios.get(
+        "user/" + orderRes.data.orderByUserAndOrderId.userId
+      );
+      if (!userRes) {
+        throw new Error("user not found");
+      }
+
+      // console.log(orderRes);
+      // console.log(orderRes.data.orderByUserAndOrderId);
+      // console.log(orderRes.data.orderByUserAndOrderId.createdAt, "createdAt");
+      // console.log(orderRes.data.orderByUserAndOrderId.id, "orderId");
+      // console.log(orderRes.data.orderByUserAndOrderId.userId, "userId");
+      // console.log(orderRes.data.orderByUserAndOrderId.OrderDetails, "map");
+      // console.log(userRes.data.user.email, "userEmail");
+
+      setOrderHis({
+        createdAt: orderRes.data.orderByUserAndOrderId.createdAt,
+        orderId: orderRes.data.orderByUserAndOrderId.id,
+        userId: orderRes.data.orderByUserAndOrderId.userId,
+        userEmail: userRes.data.user.email,
+      });
+      setOrderDetail(orderRes.data.orderByUserAndOrderId.OrderDetails);
+      setOrderModalOpen(true);
+    } catch (err) {
+      console.log(err);
+      console.dir(err);
+    }
+  }
+  // console.log(orderHis);
+  // console.log(orderDetail);
+
+  function closeModalOrder() {
+    setOrderModalOpen(false);
+    setOrderHis();
+    setOrderDetail();
+  }
+
   return (
     <div className="content-center-admin-thirdBox">
       <div className="content-center-profile-admin-thirdBox-inside">
@@ -185,6 +253,7 @@ function ApprovePayment() {
         <div className="content-center-profile-admin-thirdBox-sortGroup">
           <div className="content-center-profile-admin-thirdBox-sortGroup-text">
             <h4>SORT OPTION</h4>
+            <h5>( กดที่เลข OrderId เพื่อดูข้อมูลการทำรายการของUser )</h5>
           </div>
           <div className="content-center-profile-admin-thirdBox-sortGroup-btnGroup">
             <button
@@ -242,17 +311,24 @@ function ApprovePayment() {
                 ปุ่ม
               </th>
             </tr>
+          </tbody>
+        </table>
 
-            {paymentDetail?.map((item, index) => {
-              return (
-                <tr
-                  className="content-center-profile-admin-thirdBox-table-tr"
-                  key={item.id}
-                >
+        {paymentDetail?.map((item, index) => {
+          return (
+            <table
+              className="content-center-profile-admin-thirdBox-table"
+              key={item.id}
+            >
+              <tbody>
+                <tr className="content-center-profile-admin-thirdBox-table-tr">
                   <td className="content-center-profile-admin-thirdBox-table-row1">
                     {index + 1}
                   </td>
-                  <td className="content-center-profile-admin-thirdBox-table-row2">
+                  <td
+                    className="content-center-profile-admin-thirdBox-table-row2"
+                    onClick={(e) => openModalOrder(e, item)}
+                  >
                     {item.Order?.id}
                   </td>
                   <td className="content-center-profile-admin-thirdBox-table-row3">
@@ -287,7 +363,6 @@ function ApprovePayment() {
                       <div className="content-center-profile-admin-thirdBox-table-btn-group">
                         <button
                           className="content-center-profile-admin-thirdBox-table-btn-accept"
-                          // onClick={(e) => console.log(item?.id)}
                           onClick={(e) => handlerAcceptPayment(e, item?.id)}
                         >
                           <CheckOutlined />
@@ -302,16 +377,93 @@ function ApprovePayment() {
                     )}
                   </td>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              </tbody>
+            </table>
+          );
+        })}
 
         <ModalOpenSlip
           modalSlipOpen={modalSlipOpen}
           closeModalSlip={closeModalSlip}
           slipImage={slipImage}
         />
+
+        <Modal
+          isOpen={orderModalOpen}
+          // onAfterOpen={afterOpenModal}
+          onRequestClose={closeModalOrder}
+          style={customModalStyles}
+          contentLabel="ShowOrderDetailForAdmin Modal"
+          ariaHideApp={false}
+        >
+          <div className="modal-box-header">
+            <div>
+              <h2>ประวัติข้อมูลการทำรายการของUser</h2>
+            </div>
+            <CloseSquareOutlined
+              onClick={closeModalOrder}
+              className="modal-box-header-close-btn"
+            />
+          </div>
+          <div className="modal-box-approvePayment-table-orderHis">
+            <div className="content-center-profile-historyBox-orderDetail-header">
+              <div>
+                <h3>Order Id: {orderHis?.orderId}</h3>
+                <h3>User Email:</h3>
+              </div>
+              <div>
+                <h3>
+                  Order Date:
+                  {orderHis?.createdAt &&
+                    moment(orderHis?.createdAt).format("DD/MM/YYYY")}
+                </h3>
+                <h3>{orderHis?.userEmail}</h3>
+              </div>
+            </div>
+            {orderDetail?.map((item, index) => {
+              return (
+                <table
+                  className="content-center-profile-historyBox-orderDetail-table"
+                  key={item.id}
+                >
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div className="modal-box-approvePayment-table-orderHis-img">
+                          <img
+                            src={item.cardCodeProductImg}
+                            alt="productImg"
+                            className="content-center-profile-historyBox-orderDetail-table-itemImg"
+                          />
+                        </div>
+                      </td>
+                      <td>{item.cardCodeProductName}</td>
+                      <td>
+                        <div className="content-center-profile-historyBox-orderDetail-table-right">
+                          ราคา {item.cardCodeProductPrice} บาท
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              );
+            })}
+
+            <div className="content-center-profile-historyBox-orderDetail-pre-footer">
+              <div>
+                <h3>ราคารวม</h3>
+              </div>
+              <div>
+                <h3>
+                  {orderDetail?.reduce((acc, item) => {
+                    return (acc = acc + +item.cardCodeProductPrice);
+                  }, 0)}{" "}
+                  บาท
+                </h3>
+              </div>
+            </div>
+          </div>
+        </Modal>
       </div>
     </div>
   );

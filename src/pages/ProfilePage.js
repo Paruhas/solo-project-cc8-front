@@ -19,16 +19,19 @@ function ProfilePage() {
 
   async function roleIsAdmin() {
     try {
-      // const decodedUserData = await jwt_decode(getToken());
-      // // console.log(decodedUserData.roleAdmin);
-      // if (decodedUserData.roleAdmin === "ADMIN") {
-      //   history.push("/admin");
-      // }
-      const userRes = await axios.get("user");
-      // console.log(userRes.data.user.roleAdmin);
-      if (userRes.data.user.roleAdmin === "ADMIN") {
+      // ท่า decode หา role
+      const decodedUserData = await jwt_decode(getToken());
+      // console.log(decodedUserData.roleAdmin);
+      if (decodedUserData.roleAdmin === "ADMIN") {
         history.push("/admin");
       }
+
+      // // ท่าแบบ getUser หา role
+      // const userRes = await axios.get("user");
+      // // console.log(userRes.data.user.roleAdmin);
+      // if (userRes.data.user.roleAdmin === "ADMIN") {
+      //   history.push("/admin");
+      // }
     } catch (err) {
       console.log(err);
     }
