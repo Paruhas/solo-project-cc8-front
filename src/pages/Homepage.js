@@ -33,6 +33,7 @@ function Homepage() {
       if (decodedUserData.roleAdmin === "ADMIN") {
         history.push("/admin");
       }
+      setLoginUserId(decodedUserData.id);
 
       // // ท่าแบบ getUser หา role
       // const userRes = await axios.get("user");
@@ -41,7 +42,7 @@ function Homepage() {
       //   history.push("/admin");
       // }
       // // console.log(userRes);
-      setLoginUserId(userRes.data.user.id);
+      // setLoginUserId(userRes.data.user.id);
     } catch (err) {
       console.log(err);
     }

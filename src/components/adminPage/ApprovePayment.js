@@ -1,23 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {
-  CheckOutlined,
-  CloseOutlined,
-  CloseSquareOutlined,
-} from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import axios from "../../configs/axios";
 
 import moment from "moment";
-import ModalOpenSlip from "../Modal/ModalOpenSlip";
 
-// Modal Order
-import Modal from "react-modal";
-const customModalStyles = {
-  content: {
-    width: "max-content",
-    margin: "auto",
-    height: "max-content",
-  },
-};
+import ModalOpenSlip from "../Modal/ModalOpenSlip";
+import ModalOrderDetailAdmin from "../Modal/ModalOrderDetailAdmin";
 
 function ApprovePayment() {
   const [paymentDetail, setPaymentDetail] = useState();
@@ -388,82 +376,12 @@ function ApprovePayment() {
           slipImage={slipImage}
         />
 
-        <Modal
-          isOpen={orderModalOpen}
-          // onAfterOpen={afterOpenModal}
-          onRequestClose={closeModalOrder}
-          style={customModalStyles}
-          contentLabel="ShowOrderDetailForAdmin Modal"
-          ariaHideApp={false}
-        >
-          <div className="modal-box-header">
-            <div>
-              <h2>ประวัติข้อมูลการทำรายการของUser</h2>
-            </div>
-            <CloseSquareOutlined
-              onClick={closeModalOrder}
-              className="modal-box-header-close-btn"
-            />
-          </div>
-          <div className="modal-box-approvePayment-table-orderHis">
-            <div className="content-center-profile-historyBox-orderDetail-header">
-              <div>
-                <h3>Order Id: {orderHis?.orderId}</h3>
-                <h3>User Email:</h3>
-              </div>
-              <div>
-                <h3>
-                  Order Date:
-                  {orderHis?.createdAt &&
-                    moment(orderHis?.createdAt).format("DD/MM/YYYY")}
-                </h3>
-                <h3>{orderHis?.userEmail}</h3>
-              </div>
-            </div>
-            {orderDetail?.map((item, index) => {
-              return (
-                <table
-                  className="content-center-profile-historyBox-orderDetail-table"
-                  key={item.id}
-                >
-                  <tbody>
-                    <tr>
-                      <td>
-                        <div className="modal-box-approvePayment-table-orderHis-img">
-                          <img
-                            src={item.cardCodeProductImg}
-                            alt="productImg"
-                            className="content-center-profile-historyBox-orderDetail-table-itemImg"
-                          />
-                        </div>
-                      </td>
-                      <td>{item.cardCodeProductName}</td>
-                      <td>
-                        <div className="content-center-profile-historyBox-orderDetail-table-right">
-                          ราคา {item.cardCodeProductPrice} บาท
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              );
-            })}
-
-            <div className="content-center-profile-historyBox-orderDetail-pre-footer">
-              <div>
-                <h3>ราคารวม</h3>
-              </div>
-              <div>
-                <h3>
-                  {orderDetail?.reduce((acc, item) => {
-                    return (acc = acc + +item.cardCodeProductPrice);
-                  }, 0)}{" "}
-                  บาท
-                </h3>
-              </div>
-            </div>
-          </div>
-        </Modal>
+        <ModalOrderDetailAdmin
+          orderModalOpen={orderModalOpen}
+          closeModalOrder={closeModalOrder}
+          orderHis={orderHis}
+          orderDetail={orderDetail}
+        />
       </div>
     </div>
   );
