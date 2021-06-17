@@ -6,6 +6,8 @@ import {
 } from "@ant-design/icons";
 import axios from "../../configs/axios";
 
+import Swal from "sweetalert2";
+
 import Modal from "react-modal";
 
 const customModalStyles = {
@@ -106,15 +108,30 @@ function BankAccList() {
     e.preventDefault();
     // console.log(bankAccId);
     try {
-      const confirmDeleteBankAcc = window.confirm("Delete this BankAcc?");
-      if (confirmDeleteBankAcc) {
+      const confirmDeleteBankAcc = await Swal.fire({
+        title: "Delete this BankAcc",
+        icon: "question",
+        showCancelButton: true,
+        showCloseButton: true,
+      });
+
+      if (confirmDeleteBankAcc.isConfirmed) {
         await axios.patch("bank-acc/" + bankAccId, {
           isDeleted: "DELETED",
         });
         getBankAccounts();
-        // location.reload();
       }
+
+      // const confirmDeleteBankAcc = window.confirm("Delete this BankAcc?");
+      // if (confirmDeleteBankAcc) {
+      //   await axios.patch("bank-acc/" + bankAccId, {
+      //     isDeleted: "DELETED",
+      //   });
+      //   getBankAccounts();
+      //   // location.reload();
+      // }
     } catch (err) {
+      console.dir(err);
       if (err.response) {
         setErrorBankAcc((prev) => ({
           ...prev,
@@ -171,7 +188,7 @@ function BankAccList() {
                         className="content-center-profile-admin-secondBox-table-btn-delete"
                         onClick={(e) => handlerDeleteBank(e, item.id)}
                       >
-                        <DeleteFilled /> Delete
+                        {/* <DeleteFilled /> Delete */}X
                       </button>
                     </div>
                   </td>

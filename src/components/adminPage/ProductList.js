@@ -128,9 +128,8 @@ function ProductList() {
   };
 
   // Modal Edit CardCode
-  const [modalEditCardProductOpen, setModalEditCardProductOpen] = useState(
-    false
-  );
+  const [modalEditCardProductOpen, setModalEditCardProductOpen] =
+    useState(false);
   const [uploadImage, setUploadImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -290,7 +289,7 @@ function ProductList() {
             });
         });
     } catch (err) {
-      console.log(err);
+      console.dir(err);
       // console.dir(err.response.data.message);
       setIsLoading(false);
       if (err.response) {
